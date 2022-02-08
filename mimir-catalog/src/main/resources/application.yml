@@ -1,0 +1,13 @@
+server.port: 4000
+
+spring:
+  application.name: mimir-catalog
+  jpa:
+    hibernate.ddl-auto: update
+    show-sql: true
+    properties.hibernate.dialect: org.hibernate.dialect.PostgreSQL10Dialect
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: password
+    url: jdbc:postgresql://localhost:5432/mimir-catalog

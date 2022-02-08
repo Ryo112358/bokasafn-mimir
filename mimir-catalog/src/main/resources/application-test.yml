@@ -1,0 +1,7 @@
+spring:
+  jpa.hibernate.ddl-auto: create
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: password
+    url: jdbc:postgresql://localhost:5432/test_mimir-catalog

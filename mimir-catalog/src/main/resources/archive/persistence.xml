@@ -1,0 +1,29 @@
+<persistence>
+    <persistence-unit name="dev.koicreek.bokasafn.mimir.catalog">
+        <description>Dev environment</description>
+        <class>com.baeldung.hibernate.pojo.Movie</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
+            <property name="javax.persistence.jdbc.user" value="postgres"/>
+            <property name="javax.persistence.jdbc.password" value="password"/>
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/mimir-catalog"/>
+        </properties>
+    </persistence-unit>
+
+    <persistence-unit name="dev.koicreek.bokasafn.mimir.catalog_test">
+        <description>Test environment</description>
+        <class>com.baeldung.hibernate.pojo.Movie</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
+            <property name="javax.persistence.jdbc.user" value="postgres"/>
+            <property name="javax.persistence.jdbc.password" value="password"/>
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/test_mimir-catalog"/>
+        </properties>
+    </persistence-unit>
+</persistence>
