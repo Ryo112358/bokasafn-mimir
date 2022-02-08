@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ActiveProfiles("test")
 @Order(0)
-@Disabled
+//@Disabled
 public class TestDataInitializer {
 
     @Autowired
@@ -34,7 +34,17 @@ public class TestDataInitializer {
 
     @BeforeAll
     final void init() {
+
+        // --- Languages -----------------------
+
         LanguageCM english = new LanguageCM("eng", "English");
+        LanguageCM estonian = new LanguageCM("est", "Estonian");
+
+        List<LanguageCM> languages = Arrays.asList(
+                english, estonian
+        );
+
+        // --- Authors -----------------------
 
         AuthorCM hill = new AuthorCM("Napoleon Hill","Hill", "Napoleon");
         AuthorCM paolini = new AuthorCM("Christopher Paolini","Paolini", "Christopher");
@@ -42,49 +52,61 @@ public class TestDataInitializer {
         AuthorCM macHale = new AuthorCM("J. D. MacHale", "MacHale", "Donald", "James");
         AuthorCM riordan = new AuthorCM("Rick Riordan", "Riordan", "Richard", "Russell");
         AuthorCM rowling = new AuthorCM("J. K. Rowling", "Rowling", "Joanne");
+        AuthorCM kiyosaki = new AuthorCM("Robert Kiyosaki", "Kiyosaki", "Robert", "Toru");
+        AuthorCM ferrazzi = new AuthorCM("Keith Ferrazzi", "Ferrazzi", "Keith");
+        AuthorCM george = new AuthorCM("Zak George", "George", "Zak");
+        AuthorCM partanen = new AuthorCM("Anu Partanen", "Partanen", "Anu");
 
         List<AuthorCM> authors = Arrays.asList(
+                hill,
+                paolini,
                 hunter,
                 macHale,
                 riordan,
                 rowling,
-                new AuthorCM("Robert Kiyosaki", "Kiyosaki", "Robert", "Toru"),
-                new AuthorCM("Keith Ferrazzi", "Ferrazzi", "Keith"),
-                new AuthorCM("Zak George", "George", "Zak"),
-                new AuthorCM("Anu Partanen", "Partanen", "Anu")
+                kiyosaki,
+                ferrazzi,
+                george,
+                partanen
         );
 
+        // --- Books -----------------------
 
-        BookDetails eragonDetails = new BookDetails(2005, 528, "Knopf Books");
-        BookCM eragon = new BookCM(9780375826696L, "Eragon", eragonDetails);
+        BookCM eragon = new BookCM(9780375826696L, "Eragon", paolini, english);
+        eragon.setDetails(new BookDetails(2005, 528, "Knopf Books"));
 
-        eragon.getAuthors().add(paolini);
-        eragon.getLanguages().add(english);
+        BookCM eldest = new BookCM(9780375840401L, "Eldest", paolini, english);
+        eldest.setDetails(new BookDetails(2007, 704, "Knopf Books"));
 
-        BookDetails eldestDetails = new BookDetails(2007, 704, "Knopf Books");
-        BookCM eldest = new BookCM(9780375840401L, "Eldest", eldestDetails);
+        BookCM brisingr = new BookCM(9780375826740L, "Brisingr", paolini, english);
+        brisingr.setDetails(new BookDetails(2010, 800, "Knopf Books"));
 
-        eldest.addAuthor(paolini);
-        eldest.addLanguage(english);
+        BookCM inheritance = new BookCM(9780375846311L, "Inheritance", paolini, english);
+        inheritance.setDetails(new BookDetails(2012, 880, "Knopf Books"));
 
-        BookDetails forkWitchWormDetails = new BookDetails(2019, 226, "Random House Print");
-        BookCM forkWitchWorm = new BookCM(9780593209226L, "The Fork, the Witch, and the Worm", "Tales from Alagaësia, Vol. 1", forkWitchWormDetails);
+        BookCM forkWitchWorm = new BookCM(9780593209226L, "The Fork, the Witch, and the Worm", paolini, english);
+        forkWitchWorm.setSubtitle("Tales from Alagaësia, Vol. 1");
+        forkWitchWorm.setDetails(new BookDetails(2019, 226, "Random House Print"));
 
-        forkWitchWorm.addAuthor(paolini);
-        forkWitchWorm.addLanguage(english);
+        List<BookCM> books = Arrays.asList(
+                eragon, eldest, brisingr, inheritance, forkWitchWorm
+        );
 
+        // --- Save test data to db -----------------------------
 
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
 
-        session.save(hill);
-
-        session.persist(eragon);
-        session.persist(eldest);
-        session.persist(forkWitchWorm);
+        for(LanguageCM language : languages) {
+            session.save(language);
+        }
 
         for(AuthorCM author : authors) {
             session.save(author);
+        }
+
+        for(BookCM book : books) {
+            session.persist(book);
         }
 
         session.getTransaction().commit();

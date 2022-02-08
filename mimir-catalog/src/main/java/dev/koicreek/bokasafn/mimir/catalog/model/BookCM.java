@@ -61,17 +61,19 @@ public class BookCM {
         this.subtitle = subtitle;
     }
 
-    public BookCM(long ISBN13, String title, BookDetails details) {
+    public BookCM(long ISBN13, String title, AuthorCM author, LanguageCM language) {
         this.ISBN13 = ISBN13;
         this.title = title;
-        this.details = details;
+        this.authors.add(author);
+        this.languages.add(language);
     }
 
-    public BookCM(long ISBN13, String title, String subtitle, BookDetails details) {
+    public BookCM(long ISBN13, String title, String subtitle, AuthorCM author, LanguageCM language) {
         this.ISBN13 = ISBN13;
         this.title = title;
         this.subtitle = subtitle;
-        this.details = details;
+        this.authors.add(author);
+        this.languages.add(language);
     }
 
     //#endRegion

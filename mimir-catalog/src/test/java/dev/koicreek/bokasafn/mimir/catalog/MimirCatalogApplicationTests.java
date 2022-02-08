@@ -35,7 +35,7 @@ class MimirCatalogApplicationTests {
 		assertEquals(1, authors.size());
 
 		AuthorCM paolini = authors.get(0);
-		assertEquals(3, paolini.getBooks().size());
+		assertEquals(5, paolini.getBooks().size());
 
 		session.close();
 

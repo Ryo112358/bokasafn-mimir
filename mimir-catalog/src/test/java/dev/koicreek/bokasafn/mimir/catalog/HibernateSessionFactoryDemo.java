@@ -89,7 +89,7 @@ public class HibernateSessionFactoryDemo {
                         "WHERE a.lastName='Paolini'");
 
         List<BookCM> books = query.list();
-        assertEquals(3, books.size());
+        assertEquals(5, books.size());
 
         session.close();
 
@@ -110,7 +110,7 @@ public class HibernateSessionFactoryDemo {
         criteria.where( cb.equal(author.get("lastName"), "Paolini") );
 
         List<BookCM> books = session.createQuery(criteria).getResultList();
-        assertEquals(3, books.size());
+        assertEquals(5, books.size());
 
         session.close();
 
@@ -129,7 +129,7 @@ public class HibernateSessionFactoryDemo {
         criteria.where( cb.equal(author.get(AuthorCM_.lastName), "Paolini") );
 
         List<BookCM> books = session.createQuery(criteria).getResultList();
-        assertEquals(3, books.size());
+        assertEquals(5, books.size());
 
         session.close();
 
@@ -137,14 +137,32 @@ public class HibernateSessionFactoryDemo {
     }
 
     @Test
-    final void GetAuthor_MaxId() {
+    final void GetBooksByPublisher_CriteriaBuilder_Embeddable() {
+        Session session = this.sessionFactory.openSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+
+        CriteriaQuery<BookCM> criteria = cb.createQuery(BookCM.class);
+
+        Root<BookCM> book = criteria.from(BookCM.class);
+        criteria.where( cb.equal(book.get(BookCM_.details).get(BookDetails_.publisher), "Knopf Books") );
+
+        List<BookCM> books = session.createQuery(criteria).getResultList();
+        assertEquals(4, books.size());
+
+        session.close();
+
+        System.out.println(listToString(books));
+    }
+
+    @Test
+    final void GetAuthorById_MaxId_Aggregate() {
         Session session = this.sessionFactory.openSession();
         CriteriaBuilder cb = session.getCriteriaBuilder();
 
         CriteriaQuery<Long> criteria = cb.createQuery(Long.class);
 
         Root<AuthorCM> authorRoot = criteria.from(AuthorCM.class);
-        criteria.select(cb.max(authorRoot.get(AuthorCM_.id)));
+        criteria.select( cb.max(authorRoot.get(AuthorCM_.id)) );
 
         Long maxAuthorId = session.createQuery(criteria).getSingleResult();
         assertTrue(maxAuthorId > 0);
