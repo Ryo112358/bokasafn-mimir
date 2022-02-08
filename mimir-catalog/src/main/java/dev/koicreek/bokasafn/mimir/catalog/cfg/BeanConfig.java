@@ -19,7 +19,7 @@ public class BeanConfig {
     @Bean
     static SessionFactory getSessionFactory() {
         StandardServiceRegistry standardRegistry = new StandardServiceRegistryBuilder()
-            .configure( "hibernate.cfg.xml" )
+            .configure( "cfg/hibernate.cfg.xml" )
             .build();
 
         Metadata metadata = buildSessionFactoryMetadata(standardRegistry);

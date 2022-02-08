@@ -44,7 +44,7 @@ public class HibernateSessionFactoryDemo {
     }
 
     @Test
-    final void GetAuthorsPage2of2_5PerPage() {
+    final void GetAuthors_Page2_5PerPage() {
         Session session = this.sessionFactory.openSession();
 
         Query<AuthorCM> query = session.createQuery("FROM Author a");
@@ -97,7 +97,7 @@ public class HibernateSessionFactoryDemo {
     }
 
     @Test
-    final void GetBooksByAuthor_CriteriaBuilder() {
+    final void GetBooksByAuthor_CriteriaAPI() {
         Session session = this.sessionFactory.openSession();
         CriteriaBuilder cb = session.getCriteriaBuilder();
 
@@ -118,7 +118,7 @@ public class HibernateSessionFactoryDemo {
     }
 
     @Test
-    final void GetBooksByAuthor_CriteriaBuilder_StaticMetamodels() {
+    final void GetBooksByAuthor_StaticMetamodels_CriteriaAPI() {
         Session session = this.sessionFactory.openSession();
         CriteriaBuilder cb = session.getCriteriaBuilder();
 
@@ -137,7 +137,7 @@ public class HibernateSessionFactoryDemo {
     }
 
     @Test
-    final void GetBooksByPublisher_CriteriaBuilder_Embeddable() {
+    final void GetBooksByPublisher_Embeddable_CriteriaAPI() {
         Session session = this.sessionFactory.openSession();
         CriteriaBuilder cb = session.getCriteriaBuilder();
 
@@ -155,7 +155,24 @@ public class HibernateSessionFactoryDemo {
     }
 
     @Test
-    final void GetAuthorById_MaxId_Aggregate() {
+    final void GetAuthorWithMaxId_Aggregate_HQL() {
+        Session session = this.sessionFactory.openSession();
+
+        Query<AuthorCM> query = session.createQuery(
+                "SELECT a " +
+                        "FROM Author a " +
+                        "WHERE a.id=(SELECT MAX(a.id) FROM Author a)");
+
+        AuthorCM author = query.getSingleResult();
+        assertTrue(author.getId() > 0);
+
+        session.close();
+
+        System.out.println(author);
+    }
+
+    @Test
+    final void GetAuthorWithMaxId_Aggregate_CriteriaAPI() {
         Session session = this.sessionFactory.openSession();
         CriteriaBuilder cb = session.getCriteriaBuilder();
 

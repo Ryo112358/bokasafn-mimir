@@ -16,7 +16,7 @@ public class TestBeanConfig {
     @Bean()
     SessionFactory createSessionFactory() {
         StandardServiceRegistry standardRegistry = new StandardServiceRegistryBuilder()
-                .configure( "hibernate-test.cfg.xml" )
+                .configure( "cfg/hibernate-test.cfg.xml" )
                 .build();
 
         Metadata metadata = BeanConfig.buildSessionFactoryMetadata(standardRegistry);
