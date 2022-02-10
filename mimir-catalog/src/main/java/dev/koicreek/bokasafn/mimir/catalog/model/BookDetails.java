@@ -1,5 +1,6 @@
 package dev.koicreek.bokasafn.mimir.catalog.model;
 
+import com.opencsv.bean.CsvBindByName;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -11,12 +12,16 @@ import static dev.koicreek.bokasafn.mimir.catalog.util.Stringify.wrapInQuotation
 @Embeddable
 public class BookDetails {
 
+    @CsvBindByName(column = "PageCount")
     @Column(name="page_count")
     private int pageCount;
 
+    @CsvBindByName(column = "YearPublished")
     @Column(name="year_published")
     private int yearPublished;
 
+    @CsvBindByName(column = "Publisher")
+    @CsvBindByName(column = "PageCount")
     @Column(name="publisher")
     private String publisher;
 

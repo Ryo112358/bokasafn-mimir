@@ -40,7 +40,7 @@ class MimirCatalogApplicationTests {
 		session.close();
 
 		System.out.println(authors.get(0));
-		System.out.println(listToString(paolini.getBooks()));
+		//System.out.println(listToString(paolini.getBooks()));
 	}
 
 	/* Notes:

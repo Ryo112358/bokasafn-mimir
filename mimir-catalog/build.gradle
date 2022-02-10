@@ -30,6 +30,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
 	implementation group: 'org.hibernate', name: 'hibernate-ehcache', version: '5.6.5.Final'
+	implementation group: 'com.opencsv', name: 'opencsv', version: '5.5.2'
 	compileOnly 'org.projectlombok:lombok'
 	compileOnly group: 'org.hibernate', name: 'hibernate-jpamodelgen', version: '5.6.5.Final'
 	runtimeOnly 'org.postgresql:postgresql'

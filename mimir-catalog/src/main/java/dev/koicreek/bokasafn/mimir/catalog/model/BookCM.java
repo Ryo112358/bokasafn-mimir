@@ -1,6 +1,11 @@
 package dev.koicreek.bokasafn.mimir.catalog.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.opencsv.bean.CsvBindAndSplitByName;
+import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvRecurse;
+import dev.koicreek.bokasafn.mimir.catalog.model.csv.TextToAuthor;
+import dev.koicreek.bokasafn.mimir.catalog.model.csv.TextToLanguage;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -18,16 +23,20 @@ import static dev.koicreek.bokasafn.mimir.catalog.util.Stringify.wrapInQuotation
 public class BookCM {
 
     @Id
+    @CsvBindByName(column = "ISBN13")
     private long ISBN13;
 
+    @CsvBindByName(column = "Title")
     @JsonProperty("bookTitle")
     @Column(name="book_title")
     private String title;
 
+    @CsvBindByName(column = "Subtitle")
     @JsonProperty("bookSubtitle")
     @Column(name="book_subtitle")
     private String subtitle;
 
+    @CsvRecurse
     @Embedded
     private BookDetails details;
 
@@ -36,6 +45,7 @@ public class BookCM {
         joinColumns = @JoinColumn(name = "isbn13"),
         inverseJoinColumns = @JoinColumn(name = "author_id")
     )
+    @CsvBindAndSplitByName(column = "Authors", splitOn = "\\|+", elementType = AuthorCM.class, converter = TextToAuthor.class)
     private List<AuthorCM> authors = new ArrayList<>();
 
     @ManyToMany(cascade=CascadeType.PERSIST)
@@ -43,6 +53,7 @@ public class BookCM {
         joinColumns = @JoinColumn(name = "isbn13"),
         inverseJoinColumns = @JoinColumn(name = "language_id")
     )
+    @CsvBindAndSplitByName(column = "Languages", splitOn = "\\|+", elementType = LanguageCM.class, converter = TextToLanguage.class)
     private List<LanguageCM> languages =  new ArrayList<>();
 
     //#region Constructors -----------------------------------------------
@@ -68,12 +79,27 @@ public class BookCM {
         this.languages.add(language);
     }
 
-    public BookCM(long ISBN13, String title, String subtitle, AuthorCM author, LanguageCM language) {
+    public BookCM(long ISBN13, String title, String languageCode, long authorId) {
+        this.ISBN13 = ISBN13;
+        this.title = title;
+        this.authors.add(new AuthorCM(authorId));
+        this.languages.add(new LanguageCM(languageCode));
+    }
+
+    public BookCM(long ISBN13, String title, String subtitle, LanguageCM language, AuthorCM author) {
         this.ISBN13 = ISBN13;
         this.title = title;
         this.subtitle = subtitle;
         this.authors.add(author);
         this.languages.add(language);
+    }
+
+    public BookCM(long ISBN13, String title, String subtitle, String languageCode, long authorId) {
+        this.ISBN13 = ISBN13;
+        this.title = title;
+        this.subtitle = subtitle;
+        this.authors.add(new AuthorCM(authorId));
+        this.languages.add(new LanguageCM(languageCode));
     }
 
     //#endRegion
@@ -101,6 +127,7 @@ public class BookCM {
     }
 
     public void setSubtitle(String subtitle) {
+        if(subtitle.equals("")) subtitle = null;
         this.subtitle = subtitle;
     }
 
@@ -143,7 +170,7 @@ public class BookCM {
     //#endRegion
 
     public String toString() {
-        StringBuilder sb = new StringBuilder("\nBookCM {\n");
+        StringBuilder sb = new StringBuilder("BookCM {\n");
 
         sb.append(String.format("\tisbn13: %d,\n", this.ISBN13));
         sb.append(String.format("\ttitle: %s,\n", wrapInQuotations(this.title)));

@@ -23,7 +23,7 @@
         <property name="connection.password">password</property>
 
         <!-- Drop and re-create the database schema on startup -->
-        <property name="hbm2ddl.auto">update</property>
+        <property name="hbm2ddl.auto">create</property>
 
         <!-- Echo all executed SQL to stdout -->
         <property name="show_sql">true</property>

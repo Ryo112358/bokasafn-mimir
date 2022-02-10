@@ -27,11 +27,11 @@ public class Stringify {
     public static <T> String listToString(List<T> list, String label) {
         if(list.size() == 0) return "{ <empty> }";
 
-        StringBuilder sb = new StringBuilder(label == null ? "" : label + " ").append("[");
+        StringBuilder sb = new StringBuilder(label == null ? "" : label + " ").append("[\n\t");
         sb.append(toIndentedString(list.get(0)));
 
         for(int i=1; i < list.size(); ++i) {
-            sb.append(",").append(toIndentedString(list.get(i)));
+            sb.append(",\n\t").append(toIndentedString(list.get(i)));
         }
         sb.append("\n]");
 

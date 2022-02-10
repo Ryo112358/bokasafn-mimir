@@ -1,6 +1,7 @@
 package dev.koicreek.bokasafn.mimir.catalog.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.opencsv.bean.CsvBindByName;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -18,12 +19,15 @@ public class LanguageCM {
 
     @Id
     @Column(name="isocode_639_3")
+    @CsvBindByName(column = "Isocode639_3")
     private String isoCode639_3;
 
+    @CsvBindByName(column = "Language")
     @JsonProperty("languageName")
     @Column(name="language_name", nullable = false)
     private String name;
 
+    @CsvBindByName(column = "NativeName")
     @JsonProperty("languageNameNative")
     @Column(name = "language_name_native")
     private String nameNative;
@@ -32,9 +36,20 @@ public class LanguageCM {
 
     public LanguageCM() {}
 
+    public LanguageCM(String isoCode639_3) {
+        if(isoCode639_3.length() != 3) throw new IllegalArgumentException("Invalid language code: " + isoCode639_3);
+        this.isoCode639_3 = isoCode639_3;
+    }
+
     public LanguageCM(String isoCode639_3, String name) {
         this.isoCode639_3 = isoCode639_3;
         this.name = name;
+    }
+
+    public LanguageCM(String isoCode639_3, String name, String nameNative) {
+        this.isoCode639_3 = isoCode639_3;
+        this.name = name;
+        this.nameNative = nameNative;
     }
 
     //#endRegion
@@ -63,6 +78,7 @@ public class LanguageCM {
     }
 
     public void setNameNative(String nameNative) {
+        if(nameNative.equals("")) nameNative = null;
         this.nameNative = nameNative;
     }
 
@@ -71,7 +87,7 @@ public class LanguageCM {
     public String toString() {
         StringBuilder sb = new StringBuilder("LanguageCM {\n");
 
-        sb.append(String.format("\tisoCode639_3: %s,\n", this.isoCode639_3));
+        sb.append(String.format("\tisoCode639_3: %s,\n", wrapInQuotations(this.isoCode639_3)));
         sb.append(String.format("\tname: %s,\n", wrapInQuotations(this.name)));
         if(nameNative != null)
             sb.append(String.format("\tnativeName: %s,\n", wrapInQuotations(this.nameNative)));

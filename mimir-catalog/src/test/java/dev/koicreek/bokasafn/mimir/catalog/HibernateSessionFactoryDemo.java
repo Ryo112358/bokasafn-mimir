@@ -65,8 +65,8 @@ public class HibernateSessionFactoryDemo {
 
         Query<AuthorCM> query = session.createQuery(
                 "SELECT a " +
-                        "FROM Author a " +
-                        "WHERE a.lastName='Paolini' AND a.firstName='Christopher'");
+                "FROM Author a " +
+                "WHERE a.lastName='Paolini' AND a.firstName='Christopher'");
 
         List<AuthorCM> authors = query.list();
         assertEquals(1, authors.size());
@@ -85,8 +85,8 @@ public class HibernateSessionFactoryDemo {
 
         Query<BookCM> query = session.createQuery(
                 "SELECT b " +
-                        "FROM Book b JOIN b.authors a " +
-                        "WHERE a.lastName='Paolini'");
+                "FROM Book b JOIN b.authors a " +
+                "WHERE a.lastName='Paolini'");
 
         List<BookCM> books = query.list();
         assertEquals(5, books.size());
@@ -160,8 +160,8 @@ public class HibernateSessionFactoryDemo {
 
         Query<AuthorCM> query = session.createQuery(
                 "SELECT a " +
-                        "FROM Author a " +
-                        "WHERE a.id=(SELECT MAX(a.id) FROM Author a)");
+                "FROM Author a " +
+                "WHERE a.id=(SELECT MAX(a.id) FROM Author a)");
 
         AuthorCM author = query.getSingleResult();
         assertTrue(author.getId() > 0);
