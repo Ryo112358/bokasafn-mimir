@@ -8,21 +8,21 @@ import javax.persistence.Embeddable;
 
 import static dev.koicreek.bokasafn.mimir.catalog.util.Stringify.wrapInQuotations;
 
+
 @Data
 @Embeddable
 public class BookDetails {
 
-    @CsvBindByName(column = "PageCount")
     @Column(name="page_count")
+    @CsvBindByName
     private int pageCount;
 
-    @CsvBindByName(column = "YearPublished")
     @Column(name="year_published")
+    @CsvBindByName
     private int yearPublished;
 
-    @CsvBindByName(column = "Publisher")
-    @CsvBindByName(column = "PageCount")
     @Column(name="publisher")
+    @CsvBindByName
     private String publisher;
 
     //#region Constructors -----------------------------
@@ -43,12 +43,12 @@ public class BookDetails {
     //#endRegion
 
     public String toString() {
-        StringBuilder sb = new StringBuilder("{\n");
+        StringBuilder sb = new StringBuilder("{");
 
-        sb.append(String.format("\tpageCount: %d,\n", this.pageCount));
-        sb.append(String.format("\tyearPublished: %s,\n", this.yearPublished));
-        sb.append(String.format("\tpublisher: %s\n", wrapInQuotations(this.publisher)));
-        sb.append("}");
+        sb.append(String.format("\n\tpageCount: %d", this.pageCount));
+        sb.append(String.format(",\n\tyearPublished: %s", this.yearPublished));
+        sb.append(String.format(",\n\tpublisher: %s", wrapInQuotations(this.publisher)));
+        sb.append("\n}");
 
         return sb.toString();
     }

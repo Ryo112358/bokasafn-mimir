@@ -145,20 +145,20 @@ public class AuthorCM {
     }
 
     public String toString(boolean includeBooks) {
-        StringBuilder sb = new StringBuilder("AuthorCM {\n");
+        StringBuilder sb = new StringBuilder("AuthorCM {");
 
-        sb.append(String.format("\tid: %d,\n", this.id));
-        sb.append(String.format("\tpenName: %s,\n", wrapInQuotations(this.penName)));
+        sb.append(String.format("\n\tid: %d", this.id));
+        sb.append(String.format(",\n\tpenName: %s", wrapInQuotations(this.penName)));
         if(isIllustrator)
-            sb.append(String.format("\tisIllustrator: %b,\n", true));
-        sb.append(String.format("\tlastName: %s,\n", wrapInQuotations(this.lastName)));
+            sb.append(String.format(",\n\tisIllustrator: %b", true));
+        sb.append(String.format(",\n\tlastName: %s", wrapInQuotations(this.lastName)));
         if(firstName != null)
-        sb.append(String.format("\tfirstName: %s,\n", wrapInQuotations(this.firstName)));
+        sb.append(String.format(",\n\tfirstName: %s", wrapInQuotations(this.firstName)));
         if(middleName != null)
-            sb.append(String.format("\tmiddleName: %s,\n", wrapInQuotations(this.middleName)));
+            sb.append(String.format(",\n\tmiddleName: %s", wrapInQuotations(this.middleName)));
         if(includeBooks)
-            sb.append(String.format("\tbooks: %s\n", toIndentedString(listToString(books))));
-        sb.append("}");
+            sb.append(String.format(",\n\tbooks: %s", toIndentedString(listToString(books))));
+        sb.append("\n}");
 
         return sb.toString();
     }

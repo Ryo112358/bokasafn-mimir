@@ -23,20 +23,20 @@ public class BookCM {
 
     @Id
     @CsvBindByName(column = "ISBN13")
-    private long ISBN13;
+    private long isbn13;
 
-    @CsvBindByName(column = "Title")
-    @JsonProperty("bookTitle")
     @Column(name="book_title")
+    @JsonProperty("bookTitle")
+    @CsvBindByName(column = "Title")
     private String title;
 
-    @CsvBindByName(column = "Subtitle")
-    @JsonProperty("bookSubtitle")
     @Column(name="book_subtitle")
+    @JsonProperty("bookSubtitle")
+    @CsvBindByName(column = "Subtitle")
     private String subtitle;
 
-    @CsvRecurse
     @Embedded
+    @CsvRecurse
     private BookDetails details;
 
     @ManyToMany(cascade=CascadeType.PERSIST)
@@ -61,32 +61,32 @@ public class BookCM {
     }
 
     public BookCM(long ISBN13, String title) {
-        this.ISBN13 = ISBN13;
+        this.isbn13 = ISBN13;
         this.title = title;
     }
 
     public BookCM(long ISBN13, String title, String subtitle) {
-        this.ISBN13 = ISBN13;
+        this.isbn13 = ISBN13;
         this.title = title;
         this.subtitle = subtitle;
     }
 
     public BookCM(long ISBN13, String title, AuthorCM author, LanguageCM language) {
-        this.ISBN13 = ISBN13;
+        this.isbn13 = ISBN13;
         this.title = title;
         this.authors.add(author);
         this.languages.add(language);
     }
 
     public BookCM(long ISBN13, String title, String languageCode, long authorId) {
-        this.ISBN13 = ISBN13;
+        this.isbn13 = ISBN13;
         this.title = title;
         this.authors.add(new AuthorCM(authorId));
         this.languages.add(new LanguageCM(languageCode));
     }
 
     public BookCM(long ISBN13, String title, String subtitle, LanguageCM language, AuthorCM author) {
-        this.ISBN13 = ISBN13;
+        this.isbn13 = ISBN13;
         this.title = title;
         this.subtitle = subtitle;
         this.authors.add(author);
@@ -94,7 +94,7 @@ public class BookCM {
     }
 
     public BookCM(long ISBN13, String title, String subtitle, String languageCode, long authorId) {
-        this.ISBN13 = ISBN13;
+        this.isbn13 = ISBN13;
         this.title = title;
         this.subtitle = subtitle;
         this.authors.add(new AuthorCM(authorId));
@@ -105,12 +105,12 @@ public class BookCM {
 
     //#region GettersSetters --------------------------------------------
 
-    public long getISBN13() {
-        return ISBN13;
+    public long getIsbn13() {
+        return isbn13;
     }
 
-    public void setISBN13(long ISBN13) {
-        this.ISBN13 = ISBN13;
+    public void setIsbn13(long isbn13) {
+        this.isbn13 = isbn13;
     }
 
     public String getTitle() {
@@ -179,35 +179,35 @@ public class BookCM {
     }
 
     public String toString(boolean includeAuthors, boolean includeLanguages) {
-        StringBuilder sb = new StringBuilder("BookCM {\n");
+        StringBuilder sb = new StringBuilder("BookCM {");
 
-        sb.append(String.format("\tisbn13: %d,\n", this.ISBN13));
-        sb.append(String.format("\ttitle: %s,\n", wrapInQuotations(this.title)));
+        sb.append(String.format("\n\tisbn13: %d", this.isbn13));
+        sb.append(String.format(",\n\ttitle: %s", wrapInQuotations(this.title)));
         if(this.subtitle != null)
-            sb.append(String.format("\tsubtitle: %s,\n", wrapInQuotations(this.subtitle)));
+            sb.append(String.format(",\n\tsubtitle: %s", wrapInQuotations(this.subtitle)));
         if(includeAuthors)
-            sb.append(String.format("\tauthors: %s,\n", toIndentedString(listToString(this.authors))));
+            sb.append(String.format(",\n\tauthors: %s", toIndentedString(listToString(this.authors))));
         if(includeLanguages)
-            sb.append(String.format("\tlanguages: %s,\n", toIndentedString(listToString(this.languages))));
-        sb.append(String.format("\tdetails: %s\n", toIndentedString(this.details)));
-        sb.append("}");
+            sb.append(String.format(",\n\tlanguages: %s", toIndentedString(listToString(this.languages))));
+        sb.append(String.format(",\n\tdetails: %s", toIndentedString(this.details)));
+        sb.append("\n}");
 
         return sb.toString();
     }
 
     public String toStringSimplified(boolean includeAuthors, boolean includeLanguages) {
-        StringBuilder sb = new StringBuilder("BookCM {\n");
+        StringBuilder sb = new StringBuilder("BookCM {");
 
-        sb.append(String.format("\tisbn13: %d,\n", this.ISBN13));
-        sb.append(String.format("\ttitle: %s,\n", wrapInQuotations(this.title)));
+        sb.append(String.format("\n\tisbn13: %d", this.isbn13));
+        sb.append(String.format(",\n\ttitle: %s", wrapInQuotations(this.title)));
         if(this.subtitle != null)
-            sb.append(String.format("\tsubtitle: %s,\n", wrapInQuotations(this.subtitle)));
+            sb.append(String.format(",\n\tsubtitle: %s", wrapInQuotations(this.subtitle)));
         if(includeAuthors)
-            sb.append(String.format("\tauthors: %s,\n", toIndentedString(AuthorCM.toString(this.authors))));
+            sb.append(String.format(",\n\tauthors: %s", toIndentedString(AuthorCM.toString(this.authors))));
         if(includeLanguages)
-            sb.append(String.format("\tlanguages: %s,\n", toIndentedString(LanguageCM.toString(this.languages))));
-        sb.append(String.format("\tdetails: %s\n", toIndentedString(this.details)));
-        sb.append("}");
+            sb.append(String.format(",\n\tlanguages: %s", toIndentedString(LanguageCM.toString(this.languages))));
+        sb.append(String.format(",\n\tdetails: %s", toIndentedString(this.details)));
+        sb.append("\n}");
 
         return sb.toString();
     }

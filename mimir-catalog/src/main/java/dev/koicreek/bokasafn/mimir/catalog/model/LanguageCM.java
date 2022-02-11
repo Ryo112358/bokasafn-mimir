@@ -84,13 +84,13 @@ public class LanguageCM {
     //#region Stringify
 
     public String toString() {
-        StringBuilder sb = new StringBuilder("LanguageCM {\n");
+        StringBuilder sb = new StringBuilder("LanguageCM {");
 
-        sb.append(String.format("\tisoCode639_3: %s,\n", wrapInQuotations(this.languageCode.getIsoCode639_3())));
-        sb.append(String.format("\tname: %s,\n", wrapInQuotations(this.name)));
+        sb.append(String.format("\n\tisoCode639_3: %s", wrapInQuotations(this.languageCode.getIsoCode639_3())));
+        sb.append(String.format(",\n\tname: %s", wrapInQuotations(this.name)));
         if(nameNative != null)
-            sb.append(String.format("\tnativeName: %s,\n", wrapInQuotations(this.nameNative)));
-        sb.append("}");
+            sb.append(String.format(",\n\tnativeName: %s", wrapInQuotations(this.nameNative)));
+        sb.append("\n}");
 
         return sb.toString();
     }
