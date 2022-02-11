@@ -13,10 +13,9 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.koicreek.bokasafn.mimir.catalog.util.Stringify.toIndentedString;
-import static dev.koicreek.bokasafn.mimir.catalog.util.Stringify.wrapInQuotations;
+import static dev.koicreek.bokasafn.mimir.catalog.util.Stringify.*;
 
-@Entity(name = "Book")
+@Entity(name = "Books")
 @Table(name = "BOOKS")
 @Cacheable
 @Cache(usage= CacheConcurrencyStrategy.READ_ONLY)
@@ -169,18 +168,65 @@ public class BookCM {
 
     //#endRegion
 
+    //#region Stringify
+
     public String toString() {
+        return this.toString(false, false);
+    }
+
+    public String toString(boolean[] printNested) {
+        return printNested.length == 2 ? this.toString(printNested[0], printNested[1]) : this.toString();
+    }
+
+    public String toString(boolean includeAuthors, boolean includeLanguages) {
         StringBuilder sb = new StringBuilder("BookCM {\n");
 
         sb.append(String.format("\tisbn13: %d,\n", this.ISBN13));
         sb.append(String.format("\ttitle: %s,\n", wrapInQuotations(this.title)));
         if(this.subtitle != null)
             sb.append(String.format("\tsubtitle: %s,\n", wrapInQuotations(this.subtitle)));
+        if(includeAuthors)
+            sb.append(String.format("\tauthors: %s,\n", toIndentedString(listToString(this.authors))));
+        if(includeLanguages)
+            sb.append(String.format("\tlanguages: %s,\n", toIndentedString(listToString(this.languages))));
         sb.append(String.format("\tdetails: %s\n", toIndentedString(this.details)));
         sb.append("}");
 
         return sb.toString();
     }
+
+    public String toStringSimplified(boolean includeAuthors, boolean includeLanguages) {
+        StringBuilder sb = new StringBuilder("BookCM {\n");
+
+        sb.append(String.format("\tisbn13: %d,\n", this.ISBN13));
+        sb.append(String.format("\ttitle: %s,\n", wrapInQuotations(this.title)));
+        if(this.subtitle != null)
+            sb.append(String.format("\tsubtitle: %s,\n", wrapInQuotations(this.subtitle)));
+        if(includeAuthors)
+            sb.append(String.format("\tauthors: %s,\n", toIndentedString(AuthorCM.toString(this.authors))));
+        if(includeLanguages)
+            sb.append(String.format("\tlanguages: %s,\n", toIndentedString(LanguageCM.toString(this.languages))));
+        sb.append(String.format("\tdetails: %s\n", toIndentedString(this.details)));
+        sb.append("}");
+
+        return sb.toString();
+    }
+
+    public static String toString(List<BookCM> bookList, boolean includeAuthors, boolean includeLanguages) {
+        if(bookList.size() == 0) return "[ <empty> ]";
+
+        StringBuilder sb = new StringBuilder("[\n\t");
+        sb.append(toIndentedString(bookList.get(0).toStringSimplified(includeAuthors, includeLanguages)));
+
+        for(int i=1; i < bookList.size(); ++i) {
+            sb.append(",\n\t").append(toIndentedString(bookList.get(i).toStringSimplified(includeAuthors, includeLanguages)));
+        }
+        sb.append("\n]");
+
+        return sb.toString();
+    }
+
+    //#endRegion
 
     /* JPA Notes:
      *   @Basic(fetch = FetchType.LAZY) - data retrieved when needed, as opposed to default [EAGER] retrieval

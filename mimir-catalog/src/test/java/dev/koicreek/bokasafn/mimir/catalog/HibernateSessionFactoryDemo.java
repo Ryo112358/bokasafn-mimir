@@ -47,7 +47,7 @@ public class HibernateSessionFactoryDemo {
     final void GetAuthors_Page2_5PerPage() {
         Session session = this.sessionFactory.openSession();
 
-        Query<AuthorCM> query = session.createQuery("FROM Author a");
+        Query<AuthorCM> query = session.createQuery("FROM Authors a");
         query.setFirstResult(5);
         query.setMaxResults(5);
 
@@ -65,8 +65,8 @@ public class HibernateSessionFactoryDemo {
 
         Query<AuthorCM> query = session.createQuery(
                 "SELECT a " +
-                "FROM Author a " +
-                "WHERE a.lastName='Paolini' AND a.firstName='Christopher'");
+                "FROM Authors a " +
+                "WHERE a.lastName='Paolini' AND a.firstName='Christopher'", AuthorCM.class);
 
         List<AuthorCM> authors = query.list();
         assertEquals(1, authors.size());
@@ -85,8 +85,8 @@ public class HibernateSessionFactoryDemo {
 
         Query<BookCM> query = session.createQuery(
                 "SELECT b " +
-                "FROM Book b JOIN b.authors a " +
-                "WHERE a.lastName='Paolini'");
+                "FROM Books b JOIN b.authors a " +
+                "WHERE a.lastName='Paolini'", BookCM.class);
 
         List<BookCM> books = query.list();
         assertEquals(5, books.size());
@@ -160,8 +160,8 @@ public class HibernateSessionFactoryDemo {
 
         Query<AuthorCM> query = session.createQuery(
                 "SELECT a " +
-                "FROM Author a " +
-                "WHERE a.id=(SELECT MAX(a.id) FROM Author a)");
+                "FROM Authors a " +
+                "WHERE a.id=(SELECT MAX(a.id) FROM Authors a)", AuthorCM.class);
 
         AuthorCM author = query.getSingleResult();
         assertTrue(author.getId() > 0);

@@ -7,11 +7,13 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 
+import java.util.List;
+
 import static dev.koicreek.bokasafn.mimir.catalog.util.Stringify.toIndentedString;
 import static dev.koicreek.bokasafn.mimir.catalog.util.Stringify.wrapInQuotations;
 
 
-@Entity(name = "Language")
+@Entity(name = "Languages")
 @Table(name = "LANGUAGES")
 @Cacheable
 @Cache(usage= CacheConcurrencyStrategy.READ_ONLY)
@@ -84,6 +86,8 @@ public class LanguageCM {
 
     //#endRegion
 
+    //#region Stringify
+
     public String toString() {
         StringBuilder sb = new StringBuilder("LanguageCM {\n");
 
@@ -95,4 +99,24 @@ public class LanguageCM {
 
         return sb.toString();
     }
+
+    public String toStringSimplified() {
+        return String.format("\"%s (%s)\"", this.name, this.isoCode639_3);
+    }
+
+    public static String toString(List<LanguageCM> languageList) {
+        if(languageList.size() == 0) return "[ <empty> ]";
+
+        StringBuilder sb = new StringBuilder("[\n\t");
+        sb.append(toIndentedString(languageList.get(0).toStringSimplified()));
+
+        for(int i=1; i < languageList.size(); ++i) {
+            sb.append(",\n\t").append(toIndentedString(languageList.get(i).toStringSimplified()));
+        }
+        sb.append("\n]");
+
+        return sb.toString();
+    }
+
+    //#endRegion
 }

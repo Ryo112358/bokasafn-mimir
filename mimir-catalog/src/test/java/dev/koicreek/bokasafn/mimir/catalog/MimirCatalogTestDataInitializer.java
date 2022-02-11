@@ -4,11 +4,12 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import dev.koicreek.bokasafn.mimir.catalog.model.AuthorCM;
 import dev.koicreek.bokasafn.mimir.catalog.model.BookCM;
+import dev.koicreek.bokasafn.mimir.catalog.model.BookCM_;
 import dev.koicreek.bokasafn.mimir.catalog.model.LanguageCM;
+import dev.koicreek.bokasafn.mimir.catalog.util.Stringify;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Fetch;
 import javax.persistence.criteria.Root;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -30,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("test")
 @Order(0)
 //@Disabled
-public class TestDataInitializer {
+public class MimirCatalogTestDataInitializer {
 
     @Autowired
     SessionFactory sessionFactory;
@@ -93,6 +95,22 @@ public class TestDataInitializer {
 
         Iterator<LanguageCM> itr = csv.stream().iterator();
 
+        assertTrue(itr.hasNext());
+
+        while(itr.hasNext()) {
+            System.out.println(itr.next());
+        }
+    }
+
+    @Test
+    final void parseAuthorsCSV() throws FileNotFoundException {
+        CsvToBean<AuthorCM> csv = new CsvToBeanBuilder(new FileReader("src/test/resources/Authors.csv"))
+                .withType(AuthorCM.class).build();
+
+        Iterator<AuthorCM> itr = csv.stream().iterator();
+
+        assertTrue(itr.hasNext());
+
         while(itr.hasNext()) {
             System.out.println(itr.next());
         }
@@ -103,12 +121,21 @@ public class TestDataInitializer {
         Session session = this.sessionFactory.openSession();
         CriteriaBuilder cb = session.getCriteriaBuilder();
 
-        CriteriaQuery<BookCM> criteria = cb.createQuery(BookCM.class);
-        Root<BookCM> book = criteria.from(BookCM.class);
-        List<BookCM> books = session.createQuery(criteria).getResultList();
+        // Join Books and Authors
+        CriteriaQuery<BookCM> authorsCriteria = cb.createQuery(BookCM.class);
+        authorsCriteria.from(BookCM.class).fetch(BookCM_.authors);
+        session.createQuery(authorsCriteria).getResultList();
+
+        // Join Books and Languages
+        CriteriaQuery<BookCM> languagesCriteria = cb.createQuery(BookCM.class);
+        Root<BookCM> bookRoot = languagesCriteria.from(BookCM.class);
+        Fetch<BookCM, LanguageCM> languageFetch = bookRoot.fetch(BookCM_.languages);
+        List<BookCM> books = session.createQuery(languagesCriteria).getResultList();
 
         session.close();
 
         assertTrue(books.size() > 0);
+
+        System.out.println(BookCM.toString(books, true, true));
     }
 }

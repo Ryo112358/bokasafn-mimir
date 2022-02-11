@@ -12,7 +12,7 @@ import java.util.List;
 import static dev.koicreek.bokasafn.mimir.catalog.util.Stringify.*;
 
 
-@Entity(name = "Author")
+@Entity(name = "Authors")
 @Table(name = "AUTHORS", indexes = @Index(columnList = "author_last_name"))
 @SequenceGenerator(
         name = "author-id-generator",
@@ -25,28 +25,31 @@ public class AuthorCM {
     @Id
     @GeneratedValue(generator = "author-id-generator")
     @JsonProperty("authorId")
-    @CsvBindByName(column = "AuthorId")
     @Column(name = "author_id")
-    private long id;
+    protected long id;
 
-    @CsvBindByName(column = "penName")
+//    @CsvBindByName(column = "PenName")
     @Column(name = "pen_name", nullable = false)
-    private String penName;
+    protected String penName;
 
-    @CsvBindByName(column = "LastName")
+//    @CsvBindByName(column = "LastName")
     @Column(name = "author_last_name", nullable = false)
-    private String lastName;
+    protected String lastName;
 
-    @CsvBindByName(column = "FirstName")
+//    @CsvBindByName(column = "FirstName")
     @Column(name = "author_first_name")
-    private String firstName;
+    protected String firstName;
 
-    @CsvBindByName(column = "MiddleName")
+//    @CsvBindByName(column = "MiddleName")
     @Column(name = "author_middle_name")
-    private String middleName;
+    protected String middleName;
+
+//    @CsvBindByName(column = "IsIllustrator")
+    @Column(name = "is_illustrator")
+    protected boolean isIllustrator;
 
     @ManyToMany(mappedBy="authors")
-    private List<BookCM> books = new ArrayList<>();
+    protected List<BookCM> books = new ArrayList<>();
 
     //#region Constructors -------------------------------------
 
@@ -131,7 +134,18 @@ public class AuthorCM {
         this.books = books;
     }
 
+    public boolean isIllustrator() {
+        return this.isIllustrator;
+    }
+
+    public void setIllustrator(boolean illustrator) {
+        this.isIllustrator = illustrator;
+    }
+
     //#endRegion
+
+    //#region Stringify
+
     public String toString() {
         return this.toString(false);
     }
@@ -139,8 +153,10 @@ public class AuthorCM {
     public String toString(boolean includeBooks) {
         StringBuilder sb = new StringBuilder("AuthorCM {\n");
 
-        sb.append(String.format("\tid: %d, \n", this.id));
+        sb.append(String.format("\tid: %d,\n", this.id));
         sb.append(String.format("\tpenName: %s,\n", wrapInQuotations(this.penName)));
+        if(isIllustrator)
+            sb.append(String.format("\tisIllustrator: %b,\n", true));
         sb.append(String.format("\tlastName: %s,\n", wrapInQuotations(this.lastName)));
         if(firstName != null)
         sb.append(String.format("\tfirstName: %s,\n", wrapInQuotations(this.firstName)));
@@ -152,4 +168,24 @@ public class AuthorCM {
 
         return sb.toString();
     }
+
+    public String toStringSimplified() {
+        return String.format("\"%s (%d)%s\"", this.penName, this.id, this.isIllustrator ? " -> Illustrator" : "");
+    }
+
+    public static String toString(List<AuthorCM> authorList) {
+        if(authorList.size() == 0) return "[ <empty> ]";
+
+        StringBuilder sb = new StringBuilder("[\n\t");
+        sb.append(toIndentedString(authorList.get(0).toStringSimplified()));
+
+        for(int i=1; i < authorList.size(); ++i) {
+            sb.append(",\n\t").append(toIndentedString(authorList.get(i).toStringSimplified()));
+        }
+        sb.append("\n]");
+
+        return sb.toString();
+    }
+
+    //#endRegion
 }

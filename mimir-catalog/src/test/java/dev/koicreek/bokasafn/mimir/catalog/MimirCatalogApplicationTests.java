@@ -28,8 +28,8 @@ class MimirCatalogApplicationTests {
 
 		Query<AuthorCM> query = session.createQuery(
 				"SELECT a " +
-					"FROM Author a " +
-					"WHERE a.lastName='Paolini' AND a.firstName='Christopher'");
+					"FROM Authors a " +
+					"WHERE a.lastName='Paolini' AND a.firstName='Christopher'", AuthorCM.class);
 
 		List<AuthorCM> authors = query.list();
 		assertEquals(1, authors.size());

@@ -21,13 +21,9 @@ public class Stringify {
     }
 
     public static <T> String listToString(List<T> list) {
-        return listToString(list, null);
-    }
+        if(list.size() == 0) return "[ <empty> ]";
 
-    public static <T> String listToString(List<T> list, String label) {
-        if(list.size() == 0) return "{ <empty> }";
-
-        StringBuilder sb = new StringBuilder(label == null ? "" : label + " ").append("[\n\t");
+        StringBuilder sb = new StringBuilder("[\n\t");
         sb.append(toIndentedString(list.get(0)));
 
         for(int i=1; i < list.size(); ++i) {
