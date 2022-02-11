@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.opencsv.bean.CsvBindAndSplitByName;
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvRecurse;
-import dev.koicreek.bokasafn.mimir.catalog.model.csv.TextToAuthor;
-import dev.koicreek.bokasafn.mimir.catalog.model.csv.TextToLanguage;
+import dev.koicreek.bokasafn.mimir.catalog.model.converter.csv.TextIdToAuthorCM;
+import dev.koicreek.bokasafn.mimir.catalog.model.converter.csv.ISOCode639ToLanguageCM;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -44,7 +44,7 @@ public class BookCM {
         joinColumns = @JoinColumn(name = "isbn13"),
         inverseJoinColumns = @JoinColumn(name = "author_id")
     )
-    @CsvBindAndSplitByName(column = "Authors", splitOn = "\\|+", elementType = AuthorCM.class, converter = TextToAuthor.class)
+    @CsvBindAndSplitByName(column = "Authors", splitOn = "\\|+", elementType = AuthorCM.class, converter = TextIdToAuthorCM.class)
     private List<AuthorCM> authors = new ArrayList<>();
 
     @ManyToMany(cascade=CascadeType.PERSIST)
@@ -52,7 +52,7 @@ public class BookCM {
         joinColumns = @JoinColumn(name = "isbn13"),
         inverseJoinColumns = @JoinColumn(name = "language_id")
     )
-    @CsvBindAndSplitByName(column = "Languages", splitOn = "\\|+", elementType = LanguageCM.class, converter = TextToLanguage.class)
+    @CsvBindAndSplitByName(column = "Languages", splitOn = "\\|+", elementType = LanguageCM.class, converter = ISOCode639ToLanguageCM.class)
     private List<LanguageCM> languages =  new ArrayList<>();
 
     //#region Constructors -----------------------------------------------
@@ -171,11 +171,11 @@ public class BookCM {
     //#region Stringify
 
     public String toString() {
-        return this.toString(false, false);
+        return this.toString(true, true);
     }
 
     public String toString(boolean[] printNested) {
-        return printNested.length == 2 ? this.toString(printNested[0], printNested[1]) : this.toString();
+        return printNested.length == 2 ? this.toString(printNested[0], printNested[1]) : this.toString(false, false);
     }
 
     public String toString(boolean includeAuthors, boolean includeLanguages) {

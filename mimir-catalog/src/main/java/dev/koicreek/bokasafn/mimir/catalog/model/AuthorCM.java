@@ -1,7 +1,6 @@
 package dev.koicreek.bokasafn.mimir.catalog.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.opencsv.bean.CsvBindByName;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -28,23 +27,18 @@ public class AuthorCM {
     @Column(name = "author_id")
     protected long id;
 
-//    @CsvBindByName(column = "PenName")
     @Column(name = "pen_name", nullable = false)
     protected String penName;
 
-//    @CsvBindByName(column = "LastName")
     @Column(name = "author_last_name", nullable = false)
     protected String lastName;
 
-//    @CsvBindByName(column = "FirstName")
     @Column(name = "author_first_name")
     protected String firstName;
 
-//    @CsvBindByName(column = "MiddleName")
     @Column(name = "author_middle_name")
     protected String middleName;
 
-//    @CsvBindByName(column = "IsIllustrator")
     @Column(name = "is_illustrator")
     protected boolean isIllustrator;
 

@@ -2,6 +2,9 @@ package dev.koicreek.bokasafn.mimir.catalog.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvCustomBindByName;
+import dev.koicreek.bokasafn.mimir.catalog.constants.LanguageCode;
+import dev.koicreek.bokasafn.mimir.catalog.model.converter.csv.ISOCode639ToLanguageCodeEnum;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -21,17 +24,18 @@ public class LanguageCM {
 
     @Id
     @Column(name="isocode_639_3")
-    @CsvBindByName(column = "Isocode639_3")
-    private String isoCode639_3;
+    @JsonProperty("isoCode639_3")
+    @CsvCustomBindByName(column = "Isocode639_3", converter = ISOCode639ToLanguageCodeEnum.class)
+    private LanguageCode languageCode;  // ISO Code 639-3
 
-    @CsvBindByName(column = "Language")
-    @JsonProperty("languageName")
     @Column(name="language_name", nullable = false)
+    @JsonProperty("languageName")
+    @CsvBindByName(column = "Language")
     private String name;
 
-    @CsvBindByName(column = "NativeName")
-    @JsonProperty("languageNameNative")
     @Column(name = "language_name_native")
+    @JsonProperty("languageNameNative")
+    @CsvBindByName(column = "NativeName")
     private String nameNative;
 
     //#region Constructors
@@ -39,32 +43,23 @@ public class LanguageCM {
     public LanguageCM() {}
 
     public LanguageCM(String isoCode639_3) {
-        if(isoCode639_3.length() != 3) throw new IllegalArgumentException("Invalid language code: " + isoCode639_3);
-        this.isoCode639_3 = isoCode639_3;
+        this.languageCode = LanguageCode.from(isoCode639_3);
     }
 
-    public LanguageCM(String isoCode639_3, String name) {
-        this.isoCode639_3 = isoCode639_3;
-        this.name = name;
-    }
-
-    public LanguageCM(String isoCode639_3, String name, String nameNative) {
-        this.isoCode639_3 = isoCode639_3;
-        this.name = name;
-        this.nameNative = nameNative;
+    public LanguageCM(LanguageCode languageCode) {
+        this.languageCode = languageCode;
     }
 
     //#endRegion
 
     //#region GettersSetters
 
-    public String getIsoCode639_3() {
-        return isoCode639_3;
+    public LanguageCode getLanguageCode() {
+        return languageCode;
     }
 
-    public void setIsoCode639_3(String isoCode639_3) {
-        if(isoCode639_3.length() != 3) throw new IllegalArgumentException("ISO 639-3 codes must be 3 chars in length.");
-        this.isoCode639_3 = isoCode639_3;
+    public void setLanguageCode(LanguageCode languageCode) {
+        this.languageCode = languageCode;
     }
 
     public String getName() {
@@ -91,7 +86,7 @@ public class LanguageCM {
     public String toString() {
         StringBuilder sb = new StringBuilder("LanguageCM {\n");
 
-        sb.append(String.format("\tisoCode639_3: %s,\n", wrapInQuotations(this.isoCode639_3)));
+        sb.append(String.format("\tisoCode639_3: %s,\n", wrapInQuotations(this.languageCode.getIsoCode639_3())));
         sb.append(String.format("\tname: %s,\n", wrapInQuotations(this.name)));
         if(nameNative != null)
             sb.append(String.format("\tnativeName: %s,\n", wrapInQuotations(this.nameNative)));
@@ -101,7 +96,7 @@ public class LanguageCM {
     }
 
     public String toStringSimplified() {
-        return String.format("\"%s (%s)\"", this.name, this.isoCode639_3);
+        return String.format("\"%s (%s)\"", this.name, this.languageCode.getIsoCode639_3());
     }
 
     public static String toString(List<LanguageCM> languageList) {

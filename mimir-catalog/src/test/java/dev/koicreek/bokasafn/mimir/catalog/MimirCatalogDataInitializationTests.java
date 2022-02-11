@@ -6,7 +6,6 @@ import dev.koicreek.bokasafn.mimir.catalog.model.AuthorCM;
 import dev.koicreek.bokasafn.mimir.catalog.model.BookCM;
 import dev.koicreek.bokasafn.mimir.catalog.model.BookCM_;
 import dev.koicreek.bokasafn.mimir.catalog.model.LanguageCM;
-import dev.koicreek.bokasafn.mimir.catalog.util.Stringify;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeAll;
@@ -32,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("test")
 @Order(0)
 //@Disabled
-public class MimirCatalogTestDataInitializer {
+public class MimirCatalogDataInitializationTests {
 
     @Autowired
     SessionFactory sessionFactory;
