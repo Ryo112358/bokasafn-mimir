@@ -1,4 +1,4 @@
-package dev.koicreek.bokasafn.mimir.catalog.constants;
+package dev.koicreek.bokasafn.mimir.catalog.constant;
 
 import lombok.Getter;
 

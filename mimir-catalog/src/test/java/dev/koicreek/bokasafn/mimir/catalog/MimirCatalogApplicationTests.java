@@ -12,7 +12,6 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static dev.koicreek.bokasafn.mimir.catalog.util.Stringify.listToString;
 
 
 @SpringBootTest
@@ -39,8 +38,7 @@ class MimirCatalogApplicationTests {
 
 		session.close();
 
-		System.out.println(authors.get(0));
-		//System.out.println(listToString(paolini.getBooks()));
+		System.out.println(paolini.toString(true));
 	}
 
 	/* Notes:

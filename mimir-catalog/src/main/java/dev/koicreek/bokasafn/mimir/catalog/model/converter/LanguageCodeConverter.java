@@ -1,6 +1,6 @@
 package dev.koicreek.bokasafn.mimir.catalog.model.converter;
 
-import dev.koicreek.bokasafn.mimir.catalog.constants.LanguageCode;
+import dev.koicreek.bokasafn.mimir.catalog.constant.LanguageCode;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

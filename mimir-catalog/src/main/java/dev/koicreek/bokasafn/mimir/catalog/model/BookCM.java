@@ -171,7 +171,7 @@ public class BookCM {
     //#region Stringify
 
     public String toString() {
-        return this.toString(true, true);
+        return this.toString(false, false);
     }
 
     public String toString(boolean[] printNested) {

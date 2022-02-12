@@ -3,7 +3,7 @@ package dev.koicreek.bokasafn.mimir.catalog.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvCustomBindByName;
-import dev.koicreek.bokasafn.mimir.catalog.constants.LanguageCode;
+import dev.koicreek.bokasafn.mimir.catalog.constant.LanguageCode;
 import dev.koicreek.bokasafn.mimir.catalog.model.converter.csv.ISOCode639ToLanguageCodeEnum;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
