@@ -37,7 +37,7 @@
         <property name="cache.use_query_cache">true</property>
 
         <!-- Names the annotated entity classes -->
-        <!-- <mapping class="dev.koicreek.bokasafn.mimir.catalog.model.BookCM"/>-->
+        <!-- <mapping class="dev.koicreek.bokasafn.mimir.catalog.models.BookCM"/>-->
 
     </session-factory>
 

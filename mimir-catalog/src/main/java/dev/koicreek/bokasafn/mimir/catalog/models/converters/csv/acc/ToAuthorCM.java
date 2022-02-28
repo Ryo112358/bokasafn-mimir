@@ -1,12 +1,12 @@
-package dev.koicreek.bokasafn.mimir.catalog.model.converter.csv;
+package dev.koicreek.bokasafn.mimir.catalog.models.converters.csv.acc;
 
 import com.opencsv.bean.AbstractCsvConverter;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 
-import dev.koicreek.bokasafn.mimir.catalog.model.AuthorCM;
+import dev.koicreek.bokasafn.mimir.catalog.models.AuthorCM;
 
 
-public class TextIdToAuthorCM extends AbstractCsvConverter {
+public class ToAuthorCM extends AbstractCsvConverter {
     @Override
     public Object convertToRead(String value) throws CsvDataTypeMismatchException {
         return new AuthorCM(Long.parseLong(value));

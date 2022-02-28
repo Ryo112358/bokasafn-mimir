@@ -1,12 +1,12 @@
-package dev.koicreek.bokasafn.mimir.catalog.model;
+package dev.koicreek.bokasafn.mimir.catalog.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import dev.koicreek.bokasafn.mimir.catalog.util.Stringify;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static dev.koicreek.bokasafn.mimir.catalog.util.Stringify.*;
 
@@ -43,7 +43,7 @@ public class AuthorCM {
     protected boolean isIllustrator;
 
     @ManyToMany(mappedBy="authors")
-    protected List<BookCM> books = new ArrayList<>();
+    protected Set<BookCM> books = new HashSet<>();
 
     //#region Constructors -------------------------------------
 
@@ -120,11 +120,11 @@ public class AuthorCM {
         this.middleName = middleName;
     }
 
-    public List<BookCM> getBooks() {
+    public Set<BookCM> getBooks() {
         return books;
     }
 
-    public void setBooks(List<BookCM> books) {
+    public void setBooks(Set<BookCM> books) {
         this.books = books;
     }
 
@@ -138,6 +138,24 @@ public class AuthorCM {
 
     //#endRegion
 
+    //#region Helpers
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AuthorCM authorCM = (AuthorCM) o;
+        return id == authorCM.id && penName.equals(authorCM.penName) && lastName.equals(authorCM.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, penName, lastName);
+    }
+
+
+    //#endRegion
+
     //#region Stringify
 
     public String toString() {
@@ -148,16 +166,16 @@ public class AuthorCM {
         StringBuilder sb = new StringBuilder("AuthorCM {");
 
         sb.append(String.format("\n\tid: %d", this.id));
-        sb.append(String.format(",\n\tpenName: %s", wrapInQuotations(this.penName)));
+        sb.append(String.format(",\n\tpenName: %s", wrap(this.penName)));
         if(isIllustrator)
             sb.append(String.format(",\n\tisIllustrator: %b", true));
-        sb.append(String.format(",\n\tlastName: %s", wrapInQuotations(this.lastName)));
+        sb.append(String.format(",\n\tlastName: %s", wrap(this.lastName)));
         if(firstName != null)
-        sb.append(String.format(",\n\tfirstName: %s", wrapInQuotations(this.firstName)));
+        sb.append(String.format(",\n\tfirstName: %s", wrap(this.firstName)));
         if(middleName != null)
-            sb.append(String.format(",\n\tmiddleName: %s", wrapInQuotations(this.middleName)));
+            sb.append(String.format(",\n\tmiddleName: %s", wrap(this.middleName)));
         if(includeBooks)
-            sb.append(String.format(",\n\tbooks: %s", toIndentedString(listToString(books))));
+            sb.append(String.format(",\n\tbooks: %s", indent(Stringify.toString(books))));
         sb.append("\n}");
 
         return sb.toString();
@@ -171,10 +189,26 @@ public class AuthorCM {
         if(authorList.size() == 0) return "[ <empty> ]";
 
         StringBuilder sb = new StringBuilder("[\n\t");
-        sb.append(toIndentedString(authorList.get(0).toStringSimplified()));
+        sb.append(indent(authorList.get(0).toStringSimplified()));
 
         for(int i=1; i < authorList.size(); ++i) {
-            sb.append(",\n\t").append(toIndentedString(authorList.get(i).toStringSimplified()));
+            sb.append(",\n\t").append(indent(authorList.get(i).toStringSimplified()));
+        }
+        sb.append("\n]");
+
+        return sb.toString();
+    }
+
+    public static String toString(Set<AuthorCM> authorSet) {
+        if(authorSet.size() == 0) return "[ <empty> ]";
+
+        Iterator<AuthorCM> itr = authorSet.iterator();
+
+        StringBuilder sb = new StringBuilder("[\n\t");
+        sb.append(indent(itr.next().toStringSimplified()));
+
+        while(itr.hasNext()) {
+            sb.append(",\n\t").append(indent(itr.next().toStringSimplified()));
         }
         sb.append("\n]");
 

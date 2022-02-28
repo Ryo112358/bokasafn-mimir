@@ -1,6 +1,6 @@
 package dev.koicreek.bokasafn.mimir.catalog;
 
-import dev.koicreek.bokasafn.mimir.catalog.model.*;
+import dev.koicreek.bokasafn.mimir.catalog.models.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;

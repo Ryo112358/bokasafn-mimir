@@ -1,8 +1,9 @@
 package dev.koicreek.bokasafn.mimir.catalog.cfg;
 
-import dev.koicreek.bokasafn.mimir.catalog.model.AuthorCM;
-import dev.koicreek.bokasafn.mimir.catalog.model.BookCM;
-import dev.koicreek.bokasafn.mimir.catalog.model.LanguageCM;
+import dev.koicreek.bokasafn.mimir.catalog.models.AuthorCM;
+import dev.koicreek.bokasafn.mimir.catalog.models.BookCM;
+import dev.koicreek.bokasafn.mimir.catalog.models.LanguageCM;
+import dev.koicreek.bokasafn.mimir.catalog.models.PublisherCM;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -35,6 +36,7 @@ public class BeanConfig {
                 .addAnnotatedClass( BookCM.class )
                 .addAnnotatedClass( AuthorCM.class )
                 .addAnnotatedClass( LanguageCM.class )
+                .addAnnotatedClass( PublisherCM.class )
                 .getMetadataBuilder()
                 .build();
     }

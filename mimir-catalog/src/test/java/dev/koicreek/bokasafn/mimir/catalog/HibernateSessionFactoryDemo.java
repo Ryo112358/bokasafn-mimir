@@ -1,6 +1,7 @@
 package dev.koicreek.bokasafn.mimir.catalog;
 
-import dev.koicreek.bokasafn.mimir.catalog.model.*;
+import dev.koicreek.bokasafn.mimir.catalog.models.*;
+import dev.koicreek.bokasafn.mimir.catalog.util.Stringify;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -12,7 +13,6 @@ import org.springframework.test.context.ActiveProfiles;
 import javax.persistence.criteria.*;
 import java.util.List;
 
-import static dev.koicreek.bokasafn.mimir.catalog.util.Stringify.listToString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -34,9 +34,8 @@ public class HibernateSessionFactoryDemo {
         assertEquals("The Fork, the Witch, and the Worm", forkWitchWorm.getTitle());
         assertEquals(2019, forkWitchWorm.getDetails().getYearPublished());
         assertEquals(1, forkWitchWorm.getAuthors().size());
-        assertEquals("Paolini", forkWitchWorm.getAuthors().get(0).getLastName());
-        assertEquals(1, forkWitchWorm.getLanguages().size());
-        assertEquals("English", forkWitchWorm.getLanguages().get(0).getName());
+        assertEquals("Paolini", forkWitchWorm.getAuthors().iterator().next().getLastName());
+        assertEquals("English", forkWitchWorm.getPrimaryLanguage().getName());
 
         session.close();
 
@@ -56,7 +55,7 @@ public class HibernateSessionFactoryDemo {
 
         session.close();
 
-        System.out.println(listToString(authors));
+        System.out.println(Stringify.toString(authors));
     }
 
     @Test
@@ -137,17 +136,17 @@ public class HibernateSessionFactoryDemo {
     }
 
     @Test
-    final void GetBooksByPublisher_Embeddable_CriteriaAPI() {
+    final void GetBooksByYearPublished_Embeddable_CriteriaAPI() {
         Session session = this.sessionFactory.openSession();
         CriteriaBuilder cb = session.getCriteriaBuilder();
 
         CriteriaQuery<BookCM> criteria = cb.createQuery(BookCM.class);
 
         Root<BookCM> book = criteria.from(BookCM.class);
-        criteria.where( cb.equal(book.get(BookCM_.details).get(BookDetails_.publisher), "Knopf Books") );
+        criteria.where( cb.equal(book.get(BookCM_.details).get(BookDetails_.yearPublished), 2012) );
 
         List<BookCM> books = session.createQuery(criteria).getResultList();
-        assertEquals(4, books.size());
+        assertTrue(books.size() > 0);
 
         session.close();
 

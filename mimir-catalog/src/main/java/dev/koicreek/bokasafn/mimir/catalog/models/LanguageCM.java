@@ -1,10 +1,7 @@
-package dev.koicreek.bokasafn.mimir.catalog.model;
+package dev.koicreek.bokasafn.mimir.catalog.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.opencsv.bean.CsvBindByName;
-import com.opencsv.bean.CsvCustomBindByName;
-import dev.koicreek.bokasafn.mimir.catalog.constant.LanguageCode;
-import dev.koicreek.bokasafn.mimir.catalog.model.converter.csv.ISOCode639ToLanguageCodeEnum;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -12,8 +9,8 @@ import javax.persistence.*;
 
 import java.util.List;
 
-import static dev.koicreek.bokasafn.mimir.catalog.util.Stringify.toIndentedString;
-import static dev.koicreek.bokasafn.mimir.catalog.util.Stringify.wrapInQuotations;
+import static dev.koicreek.bokasafn.mimir.catalog.util.Stringify.indent;
+import static dev.koicreek.bokasafn.mimir.catalog.util.Stringify.wrap;
 
 
 @Entity(name = "Languages")
@@ -25,8 +22,8 @@ public class LanguageCM {
     @Id
     @Column(name="isocode_639_3")
     @JsonProperty("isoCode639_3")
-    @CsvCustomBindByName(column = "Isocode639_3", converter = ISOCode639ToLanguageCodeEnum.class)
-    private LanguageCode languageCode;  // ISO Code 639-3
+    @CsvBindByName(column = "Isocode639_3")
+    private String isoCode639_3;
 
     @Column(name="language_name", nullable = false)
     @JsonProperty("languageName")
@@ -40,26 +37,24 @@ public class LanguageCM {
 
     //#region Constructors
 
-    public LanguageCM() {}
-
-    public LanguageCM(String isoCode639_3) {
-        this.languageCode = LanguageCode.from(isoCode639_3);
+    public LanguageCM() {
     }
 
-    public LanguageCM(LanguageCode languageCode) {
-        this.languageCode = languageCode;
+    public LanguageCM(String isoCode639_3) {
+        this.isoCode639_3 = isoCode639_3;
     }
 
     //#endRegion
 
     //#region GettersSetters
 
-    public LanguageCode getLanguageCode() {
-        return languageCode;
+
+    public String getIsoCode639_3() {
+        return isoCode639_3;
     }
 
-    public void setLanguageCode(LanguageCode languageCode) {
-        this.languageCode = languageCode;
+    public void setIsoCode639_3(String isoCode639_3) {
+        this.isoCode639_3 = isoCode639_3;
     }
 
     public String getName() {
@@ -86,27 +81,27 @@ public class LanguageCM {
     public String toString() {
         StringBuilder sb = new StringBuilder("LanguageCM {");
 
-        sb.append(String.format("\n\tisoCode639_3: %s", wrapInQuotations(this.languageCode.getIsoCode639_3())));
-        sb.append(String.format(",\n\tname: %s", wrapInQuotations(this.name)));
+        sb.append(String.format("\n\tisoCode639_3: %s", wrap(this.isoCode639_3)));
+        sb.append(String.format(",\n\tname: %s", wrap(this.name)));
         if(nameNative != null)
-            sb.append(String.format(",\n\tnativeName: %s", wrapInQuotations(this.nameNative)));
+            sb.append(String.format(",\n\tnativeName: %s", wrap(this.nameNative)));
         sb.append("\n}");
 
         return sb.toString();
     }
 
     public String toStringSimplified() {
-        return String.format("\"%s (%s)\"", this.name, this.languageCode.getIsoCode639_3());
+        return String.format("\"%s (%s)\"", this.name, this.isoCode639_3);
     }
 
     public static String toString(List<LanguageCM> languageList) {
         if(languageList.size() == 0) return "[ <empty> ]";
 
         StringBuilder sb = new StringBuilder("[\n\t");
-        sb.append(toIndentedString(languageList.get(0).toStringSimplified()));
+        sb.append(indent(languageList.get(0).toStringSimplified()));
 
         for(int i=1; i < languageList.size(); ++i) {
-            sb.append(",\n\t").append(toIndentedString(languageList.get(i).toStringSimplified()));
+            sb.append(",\n\t").append(indent(languageList.get(i).toStringSimplified()));
         }
         sb.append("\n]");
 

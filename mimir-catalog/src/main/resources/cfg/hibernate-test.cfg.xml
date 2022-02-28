@@ -40,9 +40,9 @@
 <!--        <property name="cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>-->
 
         <!-- Names the annotated entity classes -->
-<!--        <mapping class="dev.koicreek.bokasafn.mimir.catalog.model.BookCM"/>-->
-<!--        <mapping class="dev.koicreek.bokasafn.mimir.catalog.model.AuthorCM"/>-->
-<!--        <mapping class="dev.koicreek.bokasafn.mimir.catalog.model.LanguageCM"/>-->
+<!--        <mapping class="dev.koicreek.bokasafn.mimir.catalog.models.BookCM"/>-->
+<!--        <mapping class="dev.koicreek.bokasafn.mimir.catalog.models.AuthorCM"/>-->
+<!--        <mapping class="dev.koicreek.bokasafn.mimir.catalog.models.LanguageCM"/>-->
 
     </session-factory>
 
