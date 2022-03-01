@@ -1,6 +1,5 @@
 package dev.koicreek.bokasafn.mimir.catalog;
 
-import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import dev.koicreek.bokasafn.mimir.catalog.constants.Language;
 import dev.koicreek.bokasafn.mimir.catalog.models.*;
@@ -146,7 +145,7 @@ public class MimirCatalogDataInitializationTests {
         assertTrue(itr.hasNext());
 
         while(itr.hasNext()) {
-            System.out.println(itr.next().toStringSimplified(true, true));
+            System.out.println(itr.next().toStringSimplified(true, true, true));
         }
     }
 
@@ -157,31 +156,29 @@ public class MimirCatalogDataInitializationTests {
 
         List<BookCM> books;
 
-        // Join Books and Authors
+        // Populate Book Data - Publisher, Authors, & Additional Languages
         CriteriaQuery<BookCM> authorsQuery = cb.createQuery(BookCM.class);
+
         Root<BookCM> bookRoot = authorsQuery.from(BookCM.class);
+
+        Fetch<BookCM, PublisherCM> publisherFetch = bookRoot.fetch(BookCM_.publisher);
         Fetch<BookCM, AuthorCM> authorFetch = bookRoot.fetch(BookCM_.authors);
-//        Fetch<BookCM, Language> languageFetch = bookRoot.fetch(BookCM_.additionalLanguages);
+        Fetch<BookCM, Language> languageFetch = bookRoot.fetch(BookCM_.additionalLanguages, JoinType.LEFT);
+
         books = session.createQuery(authorsQuery).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).getResultList();
 
-        for(BookCM book : books) {
-            if(book.isMultilingual()) {
-                System.out.println(book.getAdditionalLanguages());
-            }
-        }
+        // Populate additional languages if present
 
-        // Join Books and Languages
-//        CriteriaQuery<BookCM> languagesCriteria = cb.createQuery(BookCM.class);
-//        Root<BookCM> bookRoot = languagesCriteria.from(BookCM.class);
-//        Fetch<BookCM, Language> languageFetch = bookRoot.fetch(BookCM_.additionalLanguages);
-//        books = session.createQuery(languagesCriteria).getResultList();
+        /* for(BookCM book : books) {
+            if(book.isMultilingual())
+                Hibernate.initialize(book.getAdditionalLanguages());
+        } */
 
         session.close();
-
 
         assertTrue(books.size() > 0);
 
         System.out.println("Book Count: " + books.size());
-        System.out.println(BookCM.toString(books, true, true));
+        System.out.println(BookCM.toString(books, true, true,true));
     }
 }

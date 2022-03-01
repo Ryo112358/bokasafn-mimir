@@ -47,15 +47,20 @@ public class BookDetails {
 
     //#endRegion
 
+    //#region Stringify
+
     public String toString() {
         StringBuilder sb = new StringBuilder("{");
 
         sb.append(String.format("\n\tformat: %s", wrap(this.format.getFormat())));
         sb.append(String.format(",\n\tpageCount: %d", this.pageCount));
         sb.append(String.format(",\n\tyearPublished: %s", this.yearPublished));
-        sb.append(String.format(",\n\tedition: %s", wrap(this.edition)));
+        if(edition != null)
+            sb.append(String.format(",\n\tedition: %s", wrap(this.edition)));
         sb.append("\n}");
 
         return sb.toString();
     }
+
+    //#endRegion
 }

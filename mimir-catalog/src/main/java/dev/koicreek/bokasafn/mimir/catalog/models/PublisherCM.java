@@ -2,6 +2,7 @@ package dev.koicreek.bokasafn.mimir.catalog.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.opencsv.bean.CsvBindByName;
+import dev.koicreek.bokasafn.mimir.catalog.util.Stringify;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -80,6 +81,40 @@ public class PublisherCM {
     //#endRegion
 
     //#region Stringify
+
+    public String toString() {
+        return this.toString(false);
+    }
+
+    public String toString(boolean includeBooks) {
+        StringBuilder sb = new StringBuilder("PublisherCM {");
+
+        sb.append(String.format("\n\tid: %d", this.id));
+        sb.append(String.format(",\n\tname: %s", wrap(this.name)));
+        if(includeBooks)
+            sb.append(String.format(",\n\tbooks: %s", indent(Stringify.toString(books))));
+        sb.append("\n}");
+
+        return sb.toString();
+    }
+
+    public String toStringSimplified() {
+        return String.format("\"%s (%d)\"", this.name, this.id);
+    }
+
+    public static String toString(List<PublisherCM> publisherList) {
+        if(publisherList.size() == 0) return "[ <empty> ]";
+
+        StringBuilder sb = new StringBuilder("[\n\t");
+        sb.append(indent(publisherList.get(0).toStringSimplified()));
+
+        for(int i=1; i < publisherList.size(); ++i) {
+            sb.append(",\n\t").append(indent(publisherList.get(i).toStringSimplified()));
+        }
+        sb.append("\n]");
+
+        return sb.toString();
+    }
 
     //#endRegion
 }

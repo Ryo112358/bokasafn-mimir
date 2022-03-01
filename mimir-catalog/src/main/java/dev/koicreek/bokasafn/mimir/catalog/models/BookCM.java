@@ -66,8 +66,8 @@ public class BookCM {
     @CsvBindAndSplitByName(column = "Authors", splitOn = "\\|+", elementType = AuthorCM.class, converter = ToAuthorCM.class)
     private Set<AuthorCM> authors = new HashSet<>();
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "publisher")
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinColumn(name = "publisher", nullable = false)
     @CsvCustomBindByName(converter = ToPublisherCM.class)
     private PublisherCM publisher;
 
@@ -109,8 +109,7 @@ public class BookCM {
     }
 
     public void setSubtitle(String subtitle) {
-        if(subtitle.equals("")) subtitle = null;
-        this.subtitle = subtitle;
+        this.subtitle = subtitle.equals("") ? null : subtitle;
     }
 
     public Language getPrimaryLanguage() {
@@ -191,14 +190,10 @@ public class BookCM {
     //#region Stringify
 
     public String toString() {
-        return this.toString(false, false);
+        return this.toString(false, false, false);
     }
 
-    public String toString(boolean[] printNested) {
-        return printNested.length == 2 ? this.toString(printNested[0], printNested[1]) : this.toString(false, false);
-    }
-
-    public String toString(boolean includeAuthors, boolean includeAdditionalLanguages) {
+    public String toString(boolean includeAuthors, boolean includePublisher, boolean includeAdditionalLanguages) {
         StringBuilder sb = new StringBuilder("BookCM {");
 
         sb.append(String.format("\n\tisbn13: %d", this.isbn13));
@@ -210,13 +205,15 @@ public class BookCM {
             sb.append(String.format(",\n\tauthors: %s", indent(Stringify.toString(this.authors))));
         if(this.isMultilingual && includeAdditionalLanguages)
             sb.append(String.format(",\n\tadditionalLanguages: %s", indent(Stringify.toString(this.additionalLanguages))));
+        if(includePublisher)
+            sb.append(String.format(",\n\tpublisher: %s", this.publisher.toString()));
         sb.append(String.format(",\n\tdetails: %s", indent(this.details)));
         sb.append("\n}");
 
         return sb.toString();
     }
 
-    public String toStringSimplified(boolean includeAuthors, boolean includeAdditionalLanguages) {
+    public String toStringSimplified(boolean includeAuthors, boolean includePublisher, boolean includeAdditionalLanguages) {
         StringBuilder sb = new StringBuilder("BookCM {");
 
         sb.append(String.format("\n\tisbn13: %d", this.isbn13));
@@ -228,20 +225,22 @@ public class BookCM {
             sb.append(String.format(",\n\tauthors: %s", indent(AuthorCM.toString(this.authors))));
         if(this.isMultilingual && includeAdditionalLanguages)
             sb.append(String.format(",\n\tadditionalLanguages: %s", indent(Language.toStringSimplified(this.additionalLanguages))));
+        if(includePublisher)
+            sb.append(String.format(",\n\tpublisher: %s", this.publisher.toStringSimplified()));
         sb.append(String.format(",\n\tdetails: %s", indent(this.details)));
         sb.append("\n}");
 
         return sb.toString();
     }
 
-    public static String toString(List<BookCM> bookList, boolean includeAuthors, boolean includeAdditionalLanguages) {
+    public static String toString(List<BookCM> bookList, boolean includeAuthors, boolean includePublisher, boolean includeAdditionalLanguages) {
         if(bookList.size() == 0) return "[ <empty> ]";
 
         StringBuilder sb = new StringBuilder("[\n\t");
-        sb.append(indent(bookList.get(0).toStringSimplified(includeAuthors, includeAdditionalLanguages)));
+        sb.append(indent(bookList.get(0).toStringSimplified(includeAuthors, includePublisher, includeAdditionalLanguages)));
 
         for(int i=1; i < bookList.size(); ++i) {
-            sb.append(",\n\t").append(indent(bookList.get(i).toStringSimplified(includeAuthors, includeAdditionalLanguages)));
+            sb.append(",\n\t").append(indent(bookList.get(i).toStringSimplified(includeAuthors, includePublisher, includeAdditionalLanguages)));
         }
         sb.append("\n]");
 

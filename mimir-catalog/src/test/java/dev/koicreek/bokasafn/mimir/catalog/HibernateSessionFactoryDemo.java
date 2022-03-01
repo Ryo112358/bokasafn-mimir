@@ -92,7 +92,7 @@ public class HibernateSessionFactoryDemo {
 
         session.close();
 
-        System.out.println(BookCM.toString(books, false, false));
+        System.out.println(BookCM.toString(books, false, false, false));
     }
 
     @Test
@@ -113,7 +113,7 @@ public class HibernateSessionFactoryDemo {
 
         session.close();
 
-        System.out.println(BookCM.toString(books, false, false));
+        System.out.println(BookCM.toString(books, false, false, false));
     }
 
     @Test
@@ -132,7 +132,7 @@ public class HibernateSessionFactoryDemo {
 
         session.close();
 
-        System.out.println(BookCM.toString(books, false, false));
+        System.out.println(BookCM.toString(books, false, false, false));
     }
 
     @Test
@@ -150,7 +150,7 @@ public class HibernateSessionFactoryDemo {
 
         session.close();
 
-        System.out.println(BookCM.toString(books, false, false));
+        System.out.println(BookCM.toString(books, false, false, false));
     }
 
     @Test
