@@ -1,13 +1,15 @@
-"ISBN13","Title","Subtitle","Authors","Format","PageCount","YearPublished","Edition","Publisher","PrimaryLanguage","IsMultilingual","AdditionalLanguages"
-"9780375826696","Eragon",,"2","Paperback","528","2005",,"1","eng",,
-"9780375840401","Eldest",,"2","Paperback","704","2007",,"1","eng",,
-"9780375826740","Brisingr",,"2","Paperback","800","2010",,"1","eng",,
-"9780375846311","Inheritance",,"2","Paperback","880","2012",,"1","eng",,
-"9780593209226","The Fork, the Witch, and the Worm","Tales from Alagaësia, Vol. 1","2","Paperback","226","2019",,"2","eng",,
-"9789949272976","Naksitrallid",,"11|12","Paperback","228","2013",,"3","est",,
-"9789949815180","Kutsika kasvatamise tarkusi",,"13","Paperback","192","2016",,"4","est",,
-"9781612680842","Fake",,"7","Paperback","461","2019",,"5","eng",,
-"9781612680170","Rich Dad Poor Dad",,"7","Paperback","336","2017",,"5","eng",,
-"9781612680057","Rich Dad's Cashflow Quadrant","Guide to Financial Freedom","7","Paperback","360","2011",,"5","eng",,
-"9781612680200","Rich Dad's Guide to Investing",,"7","Paperback","471","2012",,"5","eng",,
-"9780844285962","Norwegian Verbs & Essentials of Grammar",,"14","Paperback","167","1999","1st","6","eng","TRUE","nob"
+"ISBN13","Title","Subtitle","Authors","Format","DatePublished","PageCount","Edition","Publisher","PrimaryLanguage","IsMultilingual","AdditionalLanguages"
+"9780375826696","Eragon",,"2","Paperback","Apr 26, 2005","528",,"1","eng",,
+"9780375840401","Eldest",,"2","Paperback","Mar 13, 2007","704",,"1","eng",,
+"9780375826740","Brisingr",,"2","Paperback","Apr 13, 2010","800",,"1","eng",,
+"9780375846311","Inheritance",,"2","Paperback","Oct 23, 2012","880",,"1","eng",,
+"9780593209226","The Fork, the Witch, and the Worm","Tales from Alagaësia, Vol. 1","2","Paperback","Oct 1, 2019","226",,"2","eng",,
+"9789949272976","Naksitrallid",,"11|12","Paperback","Jan 1, 2012","228",,"3","est",,
+"9789949815180","Kutsika kasvatamise tarkusi",,"13","Paperback","Dec 17, 2016","192",,"4","est",,
+"9781612680842","Fake",,"7","Paperback","Apr 16, 2019","461",,"5","eng",,
+"9781612680170","Rich Dad Poor Dad","What the Rich Teach Their Kids About Money That the Poor and Middle Class Do Not!","7","Paperback","Apr 11, 2017","336","2nd","5","eng",,
+"9781612680194","Rich Dad Poor Dad","What the Rich Teach Their Kids About Money That the Poor and Middle Class Do Not!","7","Mass Market","Apr 11, 2017","336","2nd","5","eng",,
+"9781612680057","Rich Dad's Cashflow Quadrant","Guide to Financial Freedom","7","Paperback","Aug 16, 2011","360","2nd","5","eng",,
+"9781612680200","Rich Dad's Guide to Investing","What the Rich Invest In, That the Poor and Middle-Class Do Not","7","Paperback","Apr 3, 2012","471","Reprint","5","eng",,
+"9781612680217","Rich Dad's Guide to Investing","What the Rich Invest In, That the Poor and Middle-Class Do Not","7","Mass Market","May 1, 2012","416",,"6","eng",,
+"9780844285962","Norwegian Verbs & Essentials of Grammar",,"14","Paperback","Feb 1, 1999","167","1st","7","eng","TRUE","nob"

@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.persistence.criteria.*;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,7 +33,7 @@ public class HibernateSessionFactoryDemo {
         forkWitchWorm = session.get(BookCM.class, 9780593209226L);
 
         assertEquals("The Fork, the Witch, and the Worm", forkWitchWorm.getTitle());
-        assertEquals(2019, forkWitchWorm.getDetails().getYearPublished());
+        assertEquals(2019, forkWitchWorm.getDetails().getDatePublished().getYear());
         assertEquals(1, forkWitchWorm.getAuthors().size());
         assertEquals("Paolini", forkWitchWorm.getAuthors().iterator().next().getLastName());
         assertEquals("English", forkWitchWorm.getPrimaryLanguage().getName());
@@ -92,6 +93,7 @@ public class HibernateSessionFactoryDemo {
 
         session.close();
 
+        System.out.println("Book Count: " + books.size());
         System.out.println(BookCM.toString(books, false, false, false));
     }
 
@@ -113,6 +115,7 @@ public class HibernateSessionFactoryDemo {
 
         session.close();
 
+        System.out.println("Book Count: " + books.size());
         System.out.println(BookCM.toString(books, false, false, false));
     }
 
@@ -132,24 +135,45 @@ public class HibernateSessionFactoryDemo {
 
         session.close();
 
+        System.out.println("Book Count: " + books.size());
         System.out.println(BookCM.toString(books, false, false, false));
     }
 
     @Test
-    final void GetBooksByYearPublished_Embeddable_CriteriaAPI() {
+    final void GetBooksByPageCount_Embeddable_CriteriaAPI() {
         Session session = this.sessionFactory.openSession();
         CriteriaBuilder cb = session.getCriteriaBuilder();
 
         CriteriaQuery<BookCM> criteria = cb.createQuery(BookCM.class);
 
         Root<BookCM> book = criteria.from(BookCM.class);
-        criteria.where( cb.equal(book.get(BookCM_.details).get(BookDetails_.yearPublished), 2012) );
+        criteria.where( cb.greaterThan(book.get(BookCM_.details).get(BookDetails_.pageCount), 500) );
 
         List<BookCM> books = session.createQuery(criteria).getResultList();
         assertTrue(books.size() > 0);
 
         session.close();
 
+        System.out.println("Book Count: " + books.size());
+        System.out.println(BookCM.toString(books, false, false, false));
+    }
+
+    @Test
+    final void GetBooksByDatePublished_Embeddable_CriteriaAPI() {
+        Session session = this.sessionFactory.openSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+
+        CriteriaQuery<BookCM> criteria = cb.createQuery(BookCM.class);
+
+        Root<BookCM> book = criteria.from(BookCM.class);
+        criteria.where( cb.between(book.get(BookCM_.details).get(BookDetails_.datePublished), LocalDate.of(2012, 1, 1), LocalDate.of(2012, 12, 31)) );
+
+        List<BookCM> books = session.createQuery(criteria).getResultList();
+        assertTrue(books.size() > 0);
+
+        session.close();
+
+        System.out.println("Book Count: " + books.size());
         System.out.println(BookCM.toString(books, false, false, false));
     }
 
