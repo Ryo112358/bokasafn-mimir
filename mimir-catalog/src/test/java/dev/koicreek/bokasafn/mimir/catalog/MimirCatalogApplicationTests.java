@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -23,25 +21,19 @@ class MimirCatalogApplicationTests {
 
 	@Test
 	final void FindAuthorByNameAndGetBooks_HQL() {
-		Session session = this.sessionFactory.openSession();
+		AuthorCM paolini;
 
-		Query<AuthorCM> query = session.createQuery(
-				"SELECT a " +
-					"FROM Authors a " +
-					"WHERE a.lastName='Paolini' AND a.firstName='Christopher'", AuthorCM.class);
+		try(Session session = this.sessionFactory.openSession()) {
 
-		List<AuthorCM> authors = query.list();
-		assertEquals(1, authors.size());
+			Query<AuthorCM> query = session.createQuery(
+					"SELECT a " +
+							"FROM Authors a " +
+							"WHERE a.lastName='Paolini' AND a.firstName='Christopher'", AuthorCM.class);
 
-		AuthorCM paolini = authors.get(0);
-		assertEquals(5, paolini.getBooks().size());
-
-		session.close();
+			paolini = query.getSingleResult();
+			assertEquals(5, paolini.getBooks().size());
+		}
 
 		System.out.println(paolini.toString(true));
 	}
-
-	/* Notes:
-	 *   @Qualifier("beanName") - Autowire a specific bean to field
-	 */
 }

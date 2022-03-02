@@ -1,8 +1,5 @@
 # Bókasafn Mímirs
 
-## Environment
-- <span>Spring Boot 2.6.3</span>
-    - <span>Hibernate ORM 5.6.4</span>
-- <span>Gradle 7.3.3</span>
-- <span>OpenJDK Temurin-17.0.1+12 </span>
-- <span>IntelliJ IDEA 2021.3</span>
+## References
+- Lexile Measure Lookup - https://hub.lexile.com/find-a-book/search
+- ISO 639-3 Language Code Tables - https://iso639-3.sil.org/code_tables/639/data

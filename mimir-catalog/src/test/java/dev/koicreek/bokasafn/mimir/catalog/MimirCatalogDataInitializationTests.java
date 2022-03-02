@@ -46,60 +46,28 @@ public class MimirCatalogDataInitializationTests {
         this.languages = new CsvToBeanBuilder(new FileReader("src/test/resources/Languages.csv"))
                 .withType(LanguageCM.class).build().parse();
 
-        session = this.sessionFactory.openSession();
-        session.beginTransaction();
-
-        for(LanguageCM language : languages) {
-            session.save(language);
-        }
-
-        session.getTransaction().commit();
-        session.close();
+        this.saveEntities(languages);
 
         // --- Add Authors -----------------------
 
         this.authors = new CsvToBeanBuilder(new FileReader("src/test/resources/Authors.csv"))
                 .withType(AuthorCM.class).build().parse();
 
-        session = this.sessionFactory.openSession();
-        session.beginTransaction();
-
-        for(AuthorCM author : authors) {
-            session.save(author);
-        }
-
-        session.getTransaction().commit();
-        session.close();
+        this.saveEntities(authors);
 
         // --- Add Publishers -----------------------
 
         this.publishers = new CsvToBeanBuilder(new FileReader("src/test/resources/Publishers.csv"))
                 .withType(PublisherCM.class).build().parse();
 
-        session = this.sessionFactory.openSession();
-        session.beginTransaction();
-
-        for(PublisherCM publisher : publishers) {
-            session.save(publisher);
-        }
-
-        session.getTransaction().commit();
-        session.close();
+        this.saveEntities(publishers);
 
         // --- Add Books -----------------------
 
         this.books = new CsvToBeanBuilder(new FileReader("src/test/resources/Books.csv"))
                 .withType(BookCM.class).build().parse();
 
-        session = this.sessionFactory.openSession();
-        session.beginTransaction();
-
-        for(BookCM book : books) {
-            session.save(book);
-        }
-
-        session.getTransaction().commit();
-        session.close();
+        this.saveEntities(books);
     }
 
     @Test
@@ -151,34 +119,46 @@ public class MimirCatalogDataInitializationTests {
 
     @Test
     final void VerifyDataInitialized(){
-        Session session = this.sessionFactory.openSession();
-        CriteriaBuilder cb = session.getCriteriaBuilder();
-
         List<BookCM> books;
 
-        // Populate Book Data - Publisher, Authors, & Additional Languages
-        CriteriaQuery<BookCM> authorsQuery = cb.createQuery(BookCM.class);
+        try(Session session = this.sessionFactory.openSession()) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
 
-        Root<BookCM> bookRoot = authorsQuery.from(BookCM.class);
+            // Populate Book Data - Publisher, Authors, & Additional Languages
+            CriteriaQuery<BookCM> authorsQuery = cb.createQuery(BookCM.class);
 
-        Fetch<BookCM, PublisherCM> publisherFetch = bookRoot.fetch(BookCM_.publisher);
-        Fetch<BookCM, AuthorCM> authorFetch = bookRoot.fetch(BookCM_.authors);
-        Fetch<BookCM, Language> languageFetch = bookRoot.fetch(BookCM_.additionalLanguages, JoinType.LEFT);
+            Root<BookCM> bookRoot = authorsQuery.from(BookCM.class);
 
-        books = session.createQuery(authorsQuery).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).getResultList();
+            Fetch<BookCM, PublisherCM> publisherFetch = bookRoot.fetch(BookCM_.publisher);
+            Fetch<BookCM, AuthorCM> authorFetch = bookRoot.fetch(BookCM_.authors);
+            Fetch<BookCM, Language> languageFetch = bookRoot.fetch(BookCM_.additionalLanguages, JoinType.LEFT);
 
-        // Populate additional languages if present
+            books = session.createQuery(authorsQuery).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).getResultList();
 
-        /* for(BookCM book : books) {
-            if(book.isMultilingual())
-                Hibernate.initialize(book.getAdditionalLanguages());
-        } */
-
-        session.close();
+            // Populate additional languages if present
+            /* for(BookCM book : books) {
+                if(book.isMultilingual())
+                    Hibernate.initialize(book.getAdditionalLanguages());
+            } */
+        }
 
         assertTrue(books.size() > 0);
 
         System.out.println("Book Count: " + books.size());
         System.out.println(BookCM.toString(books, true, true,true));
     }
+
+    //#region Helpers
+
+    private <T> void saveEntities(List<T> entities) {
+        try(Session session = this.sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            for(T entity : entities) session.save(entity);
+
+            session.getTransaction().commit();
+        }
+    }
+
+    //#endRegion
 }

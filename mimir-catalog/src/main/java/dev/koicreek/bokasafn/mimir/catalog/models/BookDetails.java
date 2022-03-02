@@ -59,11 +59,12 @@ public class BookDetails {
     public String toString() {
         StringBuilder sb = new StringBuilder("{");
 
-        if(edition != null)
-            sb.append(String.format(",\n\tedition: %s", wrap(this.edition)));
         sb.append(String.format("\n\tformat: %s", wrap(this.format.getFormat())));
         sb.append(String.format(",\n\tpageCount: %d", this.pageCount));
+        if(edition != null)
+            sb.append(String.format(",\n\tedition: %s", wrap(this.edition)));
         sb.append(String.format(",\n\tdatePublished: %s", wrap(this.datePublished.format(dtf))));
+
         sb.append("\n}");
 
         return sb.toString();
