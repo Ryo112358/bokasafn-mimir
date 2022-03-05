@@ -14,6 +14,6 @@ public class BookFormatConverter implements AttributeConverter<BookFormat, Integ
 
     @Override
     public BookFormat convertToEntityAttribute(Integer dbData) {
-        return BookFormat.values[dbData];
+        return BookFormat.VALUES[dbData];
     }
 }

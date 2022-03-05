@@ -19,17 +19,17 @@ public enum BookFormat {
 
     //#region GetEnumByBookFormat
 
-    public static final BookFormat[] values = values();
-    private static final Map<String, BookFormat> bookFormatMap = new HashMap<>(values.length);
+    public static final BookFormat[] VALUES = values();
+    private static final Map<String, BookFormat> BOOK_FORMAT_MAP = new HashMap<>(VALUES.length);
 
     static {
-        for(BookFormat bookFormat : values()) {
-            bookFormatMap.put(bookFormat.getFormat(), bookFormat);
+        for(BookFormat bookFormat : VALUES) {
+            BOOK_FORMAT_MAP.put(bookFormat.getFormat(), bookFormat);
         }
     }
 
     public static BookFormat from(String bookFormat) {
-        return bookFormatMap.get(bookFormat);
+        return BOOK_FORMAT_MAP.get(bookFormat);
     }
 
     //#endRegion

@@ -1,4 +1,4 @@
-package dev.koicreek.bokasafn.mimir.catalog;
+package dev.koicreek.bokasafn.mimir.accountmanagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,10 +6,10 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @SpringBootApplication
 @EnableEurekaClient
-public class MimirCatalogApplication {
+public class MimirAccountManagementApplication {
 
 	public static void main(String[] args) {
-		 SpringApplication.run(MimirCatalogApplication.class, args);
+		SpringApplication.run(MimirAccountManagementApplication.class, args);
 	}
 
 }

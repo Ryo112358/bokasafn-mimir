@@ -39,8 +39,6 @@ public class MimirCatalogDataInitializationTests {
     @BeforeAll
     final void init() throws FileNotFoundException {
 
-        Session session;
-
         // --- Add Languages -----------------------
 
         this.languages = new CsvToBeanBuilder(new FileReader("src/test/resources/Languages.csv"))
@@ -104,9 +102,9 @@ public class MimirCatalogDataInitializationTests {
     }
 
     @Test
-    final void parseBooksCSV() throws FileNotFoundException {
-//        CsvToBean<BookCM> books = new CsvToBeanBuilder(new FileReader("src/test/resources/Books.csv"))
-//                .withType(BookCM.class).build();
+    final void parseBooksCSV() {
+        // CsvToBean<BookCM> books = new CsvToBeanBuilder(new FileReader("src/test/resources/Books.csv"))
+        //        .withType(BookCM.class).build();
 
         Iterator<BookCM> itr = books.stream().iterator();
 

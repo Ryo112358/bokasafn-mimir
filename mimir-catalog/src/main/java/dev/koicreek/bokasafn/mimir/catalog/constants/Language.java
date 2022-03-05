@@ -43,16 +43,16 @@ public enum Language {
 
     //#region GetLanguageByIsoCode
 
-    private static final Map<String, Language> languageCodeMap = new HashMap<>(values().length);
+    private static final Map<String, Language> LANGUAGE_CODE_MAP = new HashMap<>(values().length);
 
     static {
         for(Language code : values()) {
-            languageCodeMap.put(code.getIsoCode639_3(), code);
+            LANGUAGE_CODE_MAP.put(code.getIsoCode639_3(), code);
         }
     }
 
     public static Language from(String isoCode639_3) {
-        return languageCodeMap.get(isoCode639_3);
+        return LANGUAGE_CODE_MAP.get(isoCode639_3);
     }
 
     //#endRegion
