@@ -4,15 +4,18 @@ spring:
   application:
     name: mimir-catalog
     instance_id: ${INSTANCE_ID:${random.value}}
-  jpa:
-    hibernate.ddl-auto: update
-    show-sql: true
-    properties.hibernate.dialect: org.hibernate.dialect.PostgreSQL10Dialect
   datasource:
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: password
     url: jdbc:postgresql://localhost:5432/mimir-catalog
+  jpa:
+    hibernate.ddl-auto: update
+    show-sql: true
+    properties.hibernate.dialect: org.hibernate.dialect.PostgreSQL10Dialect
 eureka:
   client.serviceUrl.defaultZone: http://localhost:${EUREKA_PORT:8010}/eureka
-  instance.instance-id: ${spring.application.name}:${spring.application.instance_id}
+  instance:
+    preferIpAddress: false
+    hostname: localhost
+    instance-id: ${spring.application.name}:${spring.application.instance_id}

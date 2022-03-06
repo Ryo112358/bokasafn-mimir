@@ -1,6 +1,9 @@
 server.port: ${API_GATEWAY_PORT:8012}
 eureka:
   client.serviceUrl.defaultZone: http://localhost:${EUREKA_PORT:8010}/eureka
+  instance:
+    preferIpAddress: false
+    hostname: localhost
 spring:
   application.name: bifrost
   cloud.gateway:
@@ -14,7 +17,7 @@ spring:
       id: users-service-routing-verification
       uri: lb://mimir-users # 'lb' stands for load-balancer
       predicates[0]: Method=GET
-      predicates[1]: Path=/users/verify/routing
+      predicates[1]: Path=/verify/users/routing
       filters[0]: RemoveRequestHeader=Cookie
     # RewritePath example
     routes[1]:
@@ -23,4 +26,4 @@ spring:
       predicates[0]: Method=GET
       predicates[1]: Path=/verifyUserSvcRouting
       filters[0]: RemoveRequestHeader=Cookie
-      filters[1]: RewritePath=/verifyUserSvcRouting, /users/verify/routing  # RewritePath=/app-name/(?<segment>.*), /*\{segment}
+      filters[1]: RewritePath=/verifyUserSvcRouting, /verify/users/routing  # RewritePath=/app-name/(?<segment>.*), /*\{segment}

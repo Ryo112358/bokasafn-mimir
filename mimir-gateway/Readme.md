@@ -10,6 +10,6 @@
 
 #### Verify Users Svc Routing
 Below routes hit the same endpoint in the Users Svc VerificationAPI
-- `http://localhost:8012/mimir-users/users/verify/routing`
-- Manual route - `http://localhost:8012/users/verify/routing`
+- `http://localhost:8012/mimir-users/verify/users/routing`
+- Manual route - `http://localhost:8012/verify/users/routing`
 - Manual route - `http://localhost:8012/verifyUserSvcRouting`
