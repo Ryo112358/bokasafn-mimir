@@ -1,4 +1,4 @@
-package dev.koicreek.bokasafn.mimir.eurekadiscovery;
+package dev.koicreek.bokasafn.mimir.discovery;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
