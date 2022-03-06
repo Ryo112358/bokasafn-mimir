@@ -4,14 +4,23 @@ eureka:
 spring:
   application.name: bifrost
   cloud.gateway:
+    # Automatic routing configuration
     discovery.locator:
       enabled: true
-      lower-case-service-id: true # Allows use of lowercase app name in url request
+      lower-case-service-id: true # Allows use of lowercase app name in url requests
 
     # Manual route configuration example
     routes[0]:
-      id: users-routing-verification
+      id: users-service-routing-verification
       uri: lb://mimir-users # 'lb' stands for load-balancer
       predicates[0]: Method=GET
-      predicates[1]: Path=/users/verifyRouting
+      predicates[1]: Path=/users/verify/routing
       filters[0]: RemoveRequestHeader=Cookie
+    # RewritePath example
+    routes[1]:
+      id: users-service-routing-verification-2
+      uri: lb://mimir-users
+      predicates[0]: Method=GET
+      predicates[1]: Path=/verifyUserSvcRouting
+      filters[0]: RemoveRequestHeader=Cookie
+      filters[1]: RewritePath=/verifyUserSvcRouting, /users/verify/routing  # RewritePath=/app-name/(?<segment>.*), /*\{segment}
