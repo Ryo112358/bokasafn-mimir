@@ -1,4 +1,4 @@
-package dev.koicreek.bokasafn.mimir.users.controllers;
+package dev.koicreek.bokasafn.mimir.users.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
