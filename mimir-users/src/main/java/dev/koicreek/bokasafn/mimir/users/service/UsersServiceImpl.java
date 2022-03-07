@@ -11,11 +11,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class UsersServiceImpl implements UsersService {
 
-    @Autowired
     UsersRepository usersRepository;
 
-    @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    //#region Constructors -----------------------------------------------
+
+    @Autowired
+    public UsersServiceImpl(UsersRepository usersRepository,
+                            BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.usersRepository = usersRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
+    //#endRegion
 
     @Override
     public UserCreationResponseCM createUser(UserCM userRequest) {

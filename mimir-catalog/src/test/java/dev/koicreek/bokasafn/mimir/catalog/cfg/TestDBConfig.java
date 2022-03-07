@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Profile("test")
-public class TestBeanConfig {
+public class TestDBConfig {
 
     @Bean()
     SessionFactory createSessionFactory() {
@@ -19,7 +19,7 @@ public class TestBeanConfig {
                 .configure( "cfg/hibernate-test.cfg.xml" )
                 .build();
 
-        Metadata metadata = BeanConfig.buildSessionFactoryMetadata(standardRegistry);
+        Metadata metadata = DBConfig.buildSessionFactoryMetadata(standardRegistry);
 
         return metadata.getSessionFactoryBuilder().build();
     }

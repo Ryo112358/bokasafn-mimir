@@ -9,7 +9,8 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 public class UserCM {
 
-    private String uuid;
+    /** User UUID */
+    private String publicId;
 
     @NotBlank
     @Size(min=4, max=32)

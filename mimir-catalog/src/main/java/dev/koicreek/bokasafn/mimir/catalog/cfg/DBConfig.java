@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Profile("!test")
-public class BeanConfig {
+public class DBConfig {
 
     @Bean
     static SessionFactory getSessionFactory() {
