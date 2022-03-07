@@ -19,8 +19,8 @@ public class UserEntity implements Serializable {
     @Column(name = "user_id")
     private long id;
 
-    @Column(name = "user_uuid", unique = true, nullable = false)
-    private String uuid;
+    @Column(name = "public_uuid", unique = true, nullable = false)
+    private String publicId;
 
     @Column(length = 32, nullable = false)
     private String username;
@@ -40,7 +40,7 @@ public class UserEntity implements Serializable {
     }
 
     public UserEntity(UserCM user) {
-        this.uuid = UUID.randomUUID().toString();
+        this.publicId = UUID.randomUUID().toString();
         this.username = user.getUsername();
         this.displayName = user.getDisplayName();
         this.email = user.getEmail();

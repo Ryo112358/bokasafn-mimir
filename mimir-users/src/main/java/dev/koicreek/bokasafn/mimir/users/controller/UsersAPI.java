@@ -1,6 +1,7 @@
 package dev.koicreek.bokasafn.mimir.users.controller;
 
 import dev.koicreek.bokasafn.mimir.users.model.UserCM;
+import dev.koicreek.bokasafn.mimir.users.model.UserCreationResponseCM;
 import dev.koicreek.bokasafn.mimir.users.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class UsersAPI {
     private UsersService usersService;
 
     @PostMapping
-    public ResponseEntity<UserCM> createUser(@Valid @RequestBody UserCM userCM) {
+    public ResponseEntity<UserCreationResponseCM> createUser(@Valid @RequestBody UserCM userCM) {
         return new ResponseEntity<>(usersService.createUser(userCM), HttpStatus.CREATED);
     }
 }
