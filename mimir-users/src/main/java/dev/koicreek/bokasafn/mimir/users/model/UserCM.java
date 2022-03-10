@@ -25,4 +25,15 @@ public class UserCM {
     @NotNull
     @Email
     private String email;
+
+    //#region Constructors -----------------------------------------------
+
+    public UserCM(UserEntity user) {
+        this.publicId = user.getPublicId();
+        this.username = user.getUsername();
+        this.displayName = user.getDisplayName();
+        this.email = user.getEmail();
+    }
+
+    //#endRegion
 }

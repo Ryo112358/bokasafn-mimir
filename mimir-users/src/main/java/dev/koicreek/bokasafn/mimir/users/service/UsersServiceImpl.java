@@ -5,23 +5,30 @@ import dev.koicreek.bokasafn.mimir.users.model.UserCreationResponseCM;
 import dev.koicreek.bokasafn.mimir.users.model.UserEntity;
 import dev.koicreek.bokasafn.mimir.users.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+
 
 @Service
 public class UsersServiceImpl implements UsersService {
 
     UsersRepository usersRepository;
 
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    PasswordEncoder passwordEncoder;
 
     //#region Constructors -----------------------------------------------
 
     @Autowired
     public UsersServiceImpl(UsersRepository usersRepository,
-                            BCryptPasswordEncoder bCryptPasswordEncoder) {
+                            PasswordEncoder bCryptPasswordEncoder) {
         this.usersRepository = usersRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.passwordEncoder = bCryptPasswordEncoder;
     }
 
     //#endRegion
@@ -29,11 +36,34 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public UserCreationResponseCM createUser(UserCM userRequest) {
         UserEntity userEntity = new UserEntity(userRequest);
-        userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userRequest.getPassword()));
+        userEntity.setEncryptedPassword(passwordEncoder.encode(userRequest.getPassword()));
         this.usersRepository.save(userEntity);
 
         // System.out.printf("UUID: %s (%d)\n", userEntity.getPublicId(), userEntity.getPublicId().length());
 
         return new UserCreationResponseCM(userEntity);
     }
+
+    @Override
+    public UserCM getUserInfoByUsername(String username) {
+        UserEntity userEntity = usersRepository.findByUsername(username);
+
+        if(userEntity == null) throw new UsernameNotFoundException(username);
+
+        return new UserCM(userEntity);
+    }
+
+    //#region SpringSecurity
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserEntity user = usersRepository.findByUsername(username);
+
+        if(user == null) throw new UsernameNotFoundException(username);
+
+        return new User(user.getUsername(), user.getEncryptedPassword(), new ArrayList<>());
+    }
+
+    //#endRegion
+
 }

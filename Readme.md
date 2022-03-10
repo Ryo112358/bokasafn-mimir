@@ -1,8 +1,8 @@
 # Bókasafn Mímirs
 
 ## Execution
+- API Gateway - `java -jar bifrost/build/libs/bifrost-0.0.1-SNAPSHOT.jar`
 - Eureka - `java -jar eureka-discovery-mimir/build/libs/eureka-discovery-mimir-0.0.1-SNAPSHOT.jar`
-- API Gateway - `java -jar mimir-gateway/build/libs/mimir-gateway-0.0.1-SNAPSHOT.jar`
 
 ## References
 - Lexile Measure Lookup - https://hub.lexile.com/find-a-book/search
