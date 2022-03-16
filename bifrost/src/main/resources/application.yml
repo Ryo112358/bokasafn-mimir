@@ -18,6 +18,7 @@ spring:
       uri: lb://mimir-users # 'lb' stands for load-balancer
       predicates[0]: Method=GET
       predicates[1]: Path=/verify/users/routing
+      predicates[2]: Header=Authorization, Bearer (.*\..*\..*)  # All predicates must match request for route to be found
       filters[0]: RemoveRequestHeader=Cookie
     # RewritePath example
     routes[1]:
