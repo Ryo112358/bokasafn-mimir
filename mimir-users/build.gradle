@@ -4,7 +4,7 @@ plugins {
 	id 'java'
 }
 
-group = 'dev.koicreek'
+group = 'dev.koicreek.bokasafn.mimirs'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
@@ -47,6 +47,6 @@ dependencyManagement {
 	}
 }
 
-tasks.named('test') {
+test {
 	useJUnitPlatform()
 }
