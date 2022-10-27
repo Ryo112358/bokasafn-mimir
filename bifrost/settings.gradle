@@ -1,4 +1,0 @@
-rootProject.name = 'bifrost'
-
-include 'dev.koicreek.bokasafn.mimirs.gateway'
-

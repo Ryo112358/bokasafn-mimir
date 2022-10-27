@@ -1,0 +1,58 @@
+server.port: ${API_GATEWAY_PORT:8000}
+
+eureka:
+  instance:
+    preferIpAddress: false # localhost = 127.0.0.1
+    hostname: ${HOSTNAME:localhost}
+  client:
+    serviceUrl.defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+
+spring:
+  application.name: Bifrost
+  cloud.gateway:
+    discovery.locator:
+      enabled: true
+      lowerCaseServiceId: true
+
+    routes[0]:
+      id: users-service-routing-verification-rp
+      uri: lb://mimirusers-server-v0
+      predicates[0]: Method=GET
+      predicates[1]: Path=/verifyUserSvcRouting
+      filters[0]: RemoveRequestHeader=Cookie
+      filters[1]: RewritePath=/verifyUserSvcRouting, /users/port
+
+    routes[1]:
+      id: users-service-secured-routing-verification
+      uri: lb://mimirusers-server-v0
+      predicates[0]: Method=GET
+      predicates[1]: Path=/users/port
+      predicates[2]: Header=Authorization, Bearer (.*\..*\..*)
+      filters[0]: RemoveRequestHeader=Cookie
+      filters[1]: AuthorizationHeaderFilter
+
+    routes[2]:
+      id: user-registration
+      uri: lb://mimirusers-server-v0
+      predicates[0]: Method=POST
+      predicates[1]: Path=/mimirusers-server-v0/users
+      filters[0]: RemoveRequestHeader=Cookie
+      filters[1]: RewritePath=/mimirusers-server-v0/(?<segment>.*), /*\{segment}
+
+    routes[3]:
+      id: user-login
+      uri: lb://mimirusers-server-v0
+      predicates[0]: Method=POST
+      predicates[1]: Path=/mimirusers-server-v0/login
+      filters[0]: RemoveRequestHeader=Cookie
+      filters[1]: RewritePath=/mimirusers-server-v0/(?<segment>.*), /*\{segment}
+
+    routes[4]:
+      id: users-get-update-delete
+      uri: lb://mimirusers-server-v0
+      predicates[0]: Method=GET,PUT,DELETE
+      predicates[1]: Path=/mimirusers-server-v0/users/**
+      predicates[2]: Header=Authorization, Bearer (.*\..*\..*)
+      filters[0]: RemoveRequestHeader=Cookie
+      filters[1]: AuthorizationHeaderFilter
+      filters[2]: RewritePath=/mimirusers-server-v0/(?<segment>.*), /*\{segment}
