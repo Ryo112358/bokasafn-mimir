@@ -1,60 +1,62 @@
 package dev.koicreek.bokasafn.mimirs.users.cfg;
 
 import dev.koicreek.bokasafn.mimirs.users.UsersService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@RequiredArgsConstructor
+public class SecurityConfig {
 
-    @Autowired
-    private Environment env;
+    private final Environment env;
+    private final AuthenticationManagerBuilder authManagerBuilder;
 
-    @Autowired
-    private UsersService usersService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/h2-console/**");
+    @Bean
+    WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().antMatchers("/h2-console/**");
     }
 
-    protected void configure(AuthenticationManagerBuilder amb) throws Exception {
-        amb.userDetailsService(usersService).passwordEncoder(passwordEncoder);
-    }
-
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                            AuthenticationProvider authProvider) throws Exception {
         http.csrf().disable()
-                // Below line only allows requests coming from the API Gateway
-                .authorizeRequests().antMatchers("/**").hasIpAddress(env.getProperty("gateway.ip"))
-                .and()
-                .addFilter(this.getAuthenticationFilter());
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and().authorizeRequests()
+                .antMatchers("/**").hasIpAddress(env.getProperty("gateway.ip"))
+            .and()
+                .authenticationManager(new ProviderManager(authProvider))
+                .addFilter(new CustomAuthFilter(env, authManagerBuilder.getOrBuild()));
 
         /* To Investigate:
          *  - Postman /users POST through the API Gateway succeeds
-         *  - Postman /users POST directly to this service fails (403)?!
+         *  - Postman /users POST directly to this service fails (403)
          * Thoughts:
-         *  - Both requests are made via localhost, aren't they?
-         *  - Or maybe Postman has its own IP address which isn't 127.0.0.1?
+         *  - Aren't both requests made via the same IP, i.e. localhost?
+         *  - Or maybe Postman has its own IP address which isn't localhost?
          */
+
+        return http.build();
     }
 
-    private AuthenticationFilter getAuthenticationFilter() throws Exception {
-        AuthenticationFilter authFilter =
-                new AuthenticationFilter(usersService, env, authenticationManager());
-        // authFilter.setAuthenticationManager(authenticationManager());
-
-        // authFilter.setFilterProcessesUrl("/users/login");    // Default url is "/login"
-
-        return authFilter;
+    @Bean
+    AuthenticationProvider authProvider(UsersService usersService,
+                                        PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder);
+        provider.setUserDetailsService(usersService);
+        return provider;
     }
 
 }

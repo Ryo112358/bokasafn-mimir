@@ -3,16 +3,14 @@ package dev.koicreek.bokasafn.mimirs.users.cfg;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.koicreek.bokasafn.mimirs.users.UserEntity;
 import dev.koicreek.bokasafn.mimirs.users.contracts.LoginCM;
-import dev.koicreek.bokasafn.mimirs.users.contracts.UserRegistrationCM;
-import dev.koicreek.bokasafn.mimirs.users.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -24,21 +22,19 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class CustomAuthFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final UsersService usersService;
     private final Environment env;
 
     @Autowired
-    public AuthenticationFilter(UsersService usersService,
-                                Environment environment,
-                                AuthenticationManager authenticationManager) {
-        this.usersService = usersService;
+    public CustomAuthFilter(Environment environment,
+                            AuthenticationManager authenticationManager
+                            ) {
         this.env = environment;
         super.setAuthenticationManager(authenticationManager);
     }
 
-
+    @Override
     public Authentication attemptAuthentication(
             HttpServletRequest req, HttpServletResponse res) throws AuthenticationException
     {
@@ -50,7 +46,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                     new UsernamePasswordAuthenticationToken(
                             loginRequest.getUsername(),
                             loginRequest.getPassword(),
-                            new ArrayList<>())
+                            new ArrayList<>()
+                    )
             );
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -64,11 +61,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             FilterChain chain,
             Authentication auth) throws IOException, ServletException
     {
-        String username = ((User) auth.getPrincipal()).getUsername();
-        UserRegistrationCM user = usersService.getUserInfoByUsername(username);
+        UserEntity principal = (UserEntity) auth.getPrincipal();
 
         final long NOW = System.currentTimeMillis();
-        final long THIRTY_MINUTES = 1000 * 60 * 30;
+        final long FIVE_MINUTES = 1000 * 60 * 5;
 
         final String globalSecret = env.getProperty("token.secret");
         final String secret = globalSecret != null ? globalSecret : "Walk slowly through the doors of joy.";
@@ -76,13 +72,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         Algorithm algoHS = Algorithm.HMAC256(secret);
 
         String token = JWT.create()
-                .withSubject(user.getPublicId())
+                .withSubject(principal.getPublicId())
                 .withIssuedAt(new Date(NOW))
                 .withNotBefore(new Date(NOW))
-                .withExpiresAt(new Date(NOW + THIRTY_MINUTES))
+                .withExpiresAt(new Date(NOW + FIVE_MINUTES))
                 .sign(algoHS);
 
         res.addHeader("authToken", token);
-        res.addHeader("userId", user.getPublicId());
+        res.addHeader("userId", principal.getPublicId());
     }
 }

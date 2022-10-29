@@ -6,5 +6,4 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UsersService extends UserDetailsService {
     UserCreationResponseCM createUser(UserRegistrationCM userRegistrationCM);
-    UserRegistrationCM getUserInfoByUsername(String username);
 }
