@@ -1,5 +1,5 @@
 server.port: ${DISCOVERY_PORT:8761}
-spring.application.name: eureka-discovery-mimir
+spring.application.name: EurekaDiscoveryMimir
 eureka:
   client:
     registerWithEureka: false

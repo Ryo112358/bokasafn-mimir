@@ -1,4 +1,4 @@
-package dev.koicreek.bokasafn.mimirs.users.contracts;
+package dev.koicreek.bokasafn.mimirs.users.contracts.response;
 
 import dev.koicreek.bokasafn.mimirs.users.UserEntity;
 import lombok.Data;

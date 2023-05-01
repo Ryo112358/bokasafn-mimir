@@ -1,9 +1,9 @@
 package dev.koicreek.bokasafn.mimirs.users;
 
-import dev.koicreek.bokasafn.mimirs.users.contracts.UserCreationResponseCM;
+import dev.koicreek.bokasafn.mimirs.users.contracts.response.GetUserResponseCM;
+import dev.koicreek.bokasafn.mimirs.users.contracts.response.UserCreationResponseCM;
 import dev.koicreek.bokasafn.mimirs.users.contracts.UserRegistrationCM;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,6 +30,16 @@ public class UsersServiceImpl implements UsersService {
         }
 //        System.out.println(userEntity);
         return new UserCreationResponseCM(userEntity);
+    }
+
+    @Override
+    public GetUserResponseCM getUserByPublicId(String publicId) {
+        UserEntity userEntity = usersDAO.findByPublicId(publicId);
+
+        if(userEntity == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,"User not found");
+
+        return new GetUserResponseCM(userEntity);
     }
 
     //#region SpringSecurity
